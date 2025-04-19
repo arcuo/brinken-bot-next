@@ -16,6 +16,11 @@ export function generateAllPairings(n: number) {
 
 	// Initialize the top and bottom rows with indices representing individuals.
 	const topRow = Array.from({ length: n }, (_, i) => i);
+
+	// Shift the rows a random amount to get random starting positions for the top and bottom rows.
+	topRow.push(...topRow.splice(Math.floor(Math.random() * topRow.length), 1));
+
+	// Split the top row into two halves.
 	const bottomRow = topRow.splice(n / 2);
 
 	const matches: number[][] = [];

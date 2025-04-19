@@ -39,6 +39,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { EllipsisIcon, Trash2Icon } from "lucide-react";
 
 declare module "@tanstack/react-table" {
 	interface TableMeta<TData> {
@@ -62,10 +63,11 @@ const columns = [
 		header: "When",
 		cell: ({ cell }) => {
 			const date = DateTime.fromJSDate(cell.getValue());
-			if (date.hasSame(DateTime.now(), "day")) {
+			if (Math.floor(date.diffNow("days").days) === 0) {
 				return "Today";
 			}
-			if (date.weekNumber === DateTime.now().weekNumber) {
+
+			if (date.diffNow("days").days < 7) {
 				return `${Math.ceil(date.diffNow("days").days)} days left`;
 			}
 			return date.diffNow("weeks").toFormat("w 'weeks' 'left'");
@@ -242,44 +244,6 @@ export function DinnersTable({ data, users }: DataTableProps) {
 			</div>
 			<DataTablePagination table={table} pageSize={8} />
 			<div className="flex gap-4 items-center">
-				<Dialog.Dialog>
-					<Dialog.DialogTrigger>
-						<Button variant="destructive" size="sm" className="self-start">
-							Reschedule dinners
-						</Button>
-					</Dialog.DialogTrigger>
-					<Dialog.DialogContent>
-						<Dialog.DialogHeader>
-							<Dialog.DialogTitle>Reschedule dinners</Dialog.DialogTitle>
-							<DialogDescription asChild>
-								<p>This will remove all dinners and add new dinners!</p>
-							</DialogDescription>
-							<Dialog.DialogFooter>
-								<Dialog.DialogClose asChild>
-									<Button variant="secondary">Cancel</Button>
-								</Dialog.DialogClose>
-								<Dialog.DialogClose asChild>
-									<Button
-										variant="destructive"
-										onClick={async () => {
-											setLoading(true);
-											try {
-												await rescheduleDinners();
-											} catch (error) {
-												if (error instanceof Error) {
-													console.error(error.message);
-												}
-											}
-											setLoading(false);
-										}}
-									>
-										Reschedule
-									</Button>
-								</Dialog.DialogClose>
-							</Dialog.DialogFooter>
-						</Dialog.DialogHeader>
-					</Dialog.DialogContent>
-				</Dialog.Dialog>
 				<div className="flex-2" />
 				{loading && <Spinner size={15} variant="ellipsis" />}
 				<span className="text-sm text-neutral-600 self-end">

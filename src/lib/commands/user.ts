@@ -11,7 +11,7 @@ export const addUserCommand = {
 	id: "add-user",
 	data: new SlashCommandBuilder()
 		.setName("add-user")
-		.setDescription("Add a user to the database through the link"),
+		.setDescription("Gives you a link to add yourself to the database. It will automatically add your discord id."),
 	execute(body) {
 		const discordId = body.member?.user.id;
 		const name = body.member?.user.global_name;

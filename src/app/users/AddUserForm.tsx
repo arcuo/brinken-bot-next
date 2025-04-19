@@ -161,7 +161,7 @@ export function AddUserDialog() {
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
-			await addUser({ ...values, birthday: values.birthday.toISOString() });
+			await addUser({ ...values });
 			setOpen(false);
 		} catch (error) {
 			console.log("error:", error);

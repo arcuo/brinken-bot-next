@@ -1,14 +1,22 @@
 import {
 	type APIInteraction,
 	type APIInteractionDataOptionBase,
+	type APIMessageComponentInteraction,
 	type ApplicationCommandOptionType,
+	ButtonStyle,
+	ComponentType,
 	InteractionResponseType,
+	MessageFlags,
 } from "@discordjs/core/http-only";
 
-import type {
-	MessagePayload,
-	SlashCommandBuilder,
-	SlashCommandOptionsOnlyBuilder,
+import {
+	ActionRowBuilder,
+	BitField,
+	ButtonBuilder,
+	type InteractionReplyOptions,
+	type MessageCreateOptions,
+	type SlashCommandBuilder,
+	type SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 
 import birthdays from "./birthdays";
@@ -18,15 +26,60 @@ import dinners from "./dinners";
 export const commands = [...birthdays, ...users, ...dinners] as const;
 
 export function createResponse(opts: {
-	data: MessagePayload["body"] | MessagePayload;
+	data: InteractionReplyOptions;
 	type?: InteractionResponseType;
-}) {
+	/** Whether the message should be ephemeral or not, meaning that it should only be visible to the user who triggered the interaction. */
+	ephemeral?: boolean;
+}): {
+	type: InteractionResponseType;
+	data: InteractionReplyOptions;
+} {
+	const {
+		type = InteractionResponseType.ChannelMessageWithSource,
+		data,
+		ephemeral = true,
+	} = opts;
+
+	// Handle the interaction here
+	return {
+		type,
+		data: ephemeral
+			? {
+					flags: MessageFlags.Ephemeral,
+					...data,
+				}
+			: data,
+	};
+}
+
+export function createResponseWithClearButton(opts: {
+	data: InteractionReplyOptions;
+	type?: InteractionResponseType;
+}): {
+	type: InteractionResponseType;
+	data: InteractionReplyOptions;
+} {
 	const { type = InteractionResponseType.ChannelMessageWithSource, data } =
 		opts;
 	// Handle the interaction here
 	return {
 		type,
-		data,
+		data: {
+			flags: MessageFlags.Ephemeral,
+			...data,
+			content: `${data.content ?? ""}\n‎`, // The new line and invisible character are used to create some space for the button below
+			components: [
+				...(data.components ?? []),
+				new ActionRowBuilder<ButtonBuilder>()
+					.addComponents([
+						new ButtonBuilder()
+							.setStyle(ButtonStyle.Secondary)
+							.setLabel("Clear")
+							.setCustomId("clear_message"),
+					])
+					.toJSON(),
+			],
+		},
 	};
 }
 
@@ -41,6 +94,12 @@ export function interactionHasOptions<T extends APIInteraction>(
 	};
 } {
 	return !!interaction.data && (interaction.data as any).options !== undefined;
+}
+
+export function interactionComponentInteraction(
+	interaction: APIInteraction,
+): interaction is APIMessageComponentInteraction {
+	return !!interaction.message;
 }
 
 export type Command = {

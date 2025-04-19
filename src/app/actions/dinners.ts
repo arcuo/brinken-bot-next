@@ -1,13 +1,19 @@
 "use server";
 
+import { env } from "@/env";
 import { db } from "@/lib/db";
 import { dinners as dinnerSchema } from "@/lib/db/schemas/dinners";
 import { users } from "@/lib/db/schemas/users";
 import {
+	createPollToChannel,
+	sendMessageToChannel,
+} from "@/lib/discord/client";
+import {
 	generateAllPairings,
 	getNextNWednesdaysFromDate,
 } from "@/lib/pairings";
-import { asc, gte, eq, aliasedTable, desc } from "drizzle-orm";
+import { asc, gte, eq, aliasedTable, desc, gt } from "drizzle-orm";
+import { DateTime } from "luxon";
 import { revalidatePath } from "next/cache";
 
 const headchef = aliasedTable(users, "headchef");
@@ -22,14 +28,29 @@ export type DinnerDate = {
 export async function getAllNextDinners() {
 	// Fetch all dinners from the database
 	// This is a placeholder function. You should implement the actual logic to fetch all dinners from your database.
+	const todayAtMidnight = DateTime.now().set({ hour: 0, minute: 0, second: 0 });
 	const dinners = await db
 		.select()
 		.from(dinnerSchema)
-		.where(gte(dinnerSchema.date, new Date()))
+		.where(gte(dinnerSchema.date, todayAtMidnight.toJSDate()))
 		.leftJoin(headchef, eq(dinnerSchema.headchefId, headchef.id))
 		.leftJoin(souschef, eq(dinnerSchema.souschefId, souschef.id))
 		.orderBy(asc(dinnerSchema.date));
 	return dinners as unknown as DinnerDate[];
+}
+
+export async function getNextDinner() {
+	const todayAtMidnight = DateTime.now().set({ hour: 0, minute: 0, second: 0 });
+	return (
+		await db
+			.select()
+			.from(dinnerSchema)
+			.where(gte(dinnerSchema.date, todayAtMidnight.toJSDate()))
+			.leftJoin(headchef, eq(dinnerSchema.headchefId, headchef.id))
+			.leftJoin(souschef, eq(dinnerSchema.souschefId, souschef.id))
+			.orderBy(asc(dinnerSchema.date))
+			.limit(1)
+	)[0] as unknown as DinnerDate;
 }
 
 export async function getDinnerSchedule() {
@@ -92,7 +113,7 @@ export async function addNewScheduledDinners(fromDate: Date) {
 
 /** Remove all dinners and add new dinners */
 export async function rescheduleDinners() {
-	await db.delete(dinnerSchema);
+	await db.delete(dinnerSchema).where(gt(dinnerSchema.date, new Date()));
 	await addNewScheduledDinners(new Date());
 	console.log("Dinners rescheduled");
 	revalidatePath("/dinners");
@@ -104,4 +125,82 @@ export async function updateDinner(dinner: typeof dinnerSchema.$inferSelect) {
 		.set(dinner)
 		.where(eq(dinnerSchema.id, dinner.id));
 	revalidatePath("/dinners");
+}
+
+/** Handle the monday before dinner. Notify chefs and send message for voting whether I'm coming */
+export async function handleMondayBeforeDinner(debugging = false) {
+	const isMonday = DateTime.now().weekdayLong === "Monday";
+	if (!debugging && !isMonday) return;
+
+	// Fetch next dinner day
+	const nextDinnerDay = await getNextDinner();
+
+	if (!nextDinnerDay) {
+		throw Error(
+			"handleMondayBeforeDinner: Could not find a dinner date for this week in the Database",
+		);
+	}
+
+	const duration = DateTime.fromJSDate(nextDinnerDay.dinner.date).diffNow(
+		"hours",
+	).hours;
+
+	await sendMessageToChannel(
+		env.DINNER_CHANNEL_ID,
+		`
+# Dinner on Wednesday! :spaghetti:
+
+@everyone We are having our regular dinner date on Wednesday! It will be awesome to see you all there! :tada:
+
+**Head chef**: <@${nextDinnerDay.headchef.discordId}>
+**Sous chef**: <@${nextDinnerDay.souschef.discordId}>
+
+		`,
+	);
+
+	await createPollToChannel(env.DINNER_CHANNEL_ID, {
+		question: {
+			text: "Are you attending dinner on Wednesday?",
+		},
+		answers: [
+			{
+				text: "Yes I'm joining!",
+				emoji: "🤩",
+			},
+			{
+				text: "No I won't be joining",
+				emoji: "😟",
+			},
+			{
+				text: "I'll be joining late, leave me a plate!",
+				emoji: "🍝",
+			},
+		],
+		allowMultiselect: false,
+		duration,
+	});
+}
+
+export async function handleDayOfDinner(debugging = false) {
+	const isWednesday = DateTime.now().weekdayLong === "Wednesday";
+	if (!isWednesday && !debugging) {
+		return;
+	}
+	// Fetch next dinner day
+	const thisDinnerDay = await getNextDinner();
+	if (!thisDinnerDay) {
+		throw Error(
+			"handleDayOfDinner: Could not find a dinner date for this week in the Database",
+		);
+	}
+
+	await sendMessageToChannel(
+		env.DINNER_CHANNEL_ID,
+		`
+# Dinner day :spaghetti:
+@everyone today is dinner day with 
+**Head chef**: <@${thisDinnerDay.headchef.discordId}>
+**Sous chef**: <@${thisDinnerDay.souschef.discordId}>
+		`,
+	);
 }

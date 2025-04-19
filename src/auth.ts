@@ -1,3 +1,4 @@
+import type { APIInteraction } from "discord.js";
 import type { NextRequest } from "next/server";
 import nacl from "tweetnacl";
 
@@ -6,7 +7,7 @@ export async function auth(request: NextRequest): Promise<
 			valid: false;
 			body: null;
 	  }
-	| { valid: true; body: any }
+	| { valid: true; body: APIInteraction }
 > {
 	const signature = request.headers.get("X-Signature-Ed25519")!;
 	const timestamp = request.headers.get("X-Signature-Timestamp")!;

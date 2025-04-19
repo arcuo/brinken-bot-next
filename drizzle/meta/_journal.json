@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1744456207035,
-      "tag": "0000_omniscient_firebrand",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1744624016718,
-      "tag": "0001_friendly_screwball",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1744631313080,
-      "tag": "0002_dear_venus",
+      "when": 1744811334278,
+      "tag": "0000_faithful_chronomancer",
       "breakpoints": true
     }
   ]

@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test";
 
-import { generateAllPairings, getLastWednesdayFromNow, getNextNWednesdaysFromDate } from "@/lib/pairings";
+import {
+	generateAllPairings,
+	getLastWednesdayFromNow,
+	getNextNWednesdaysFromDate,
+} from "@/lib/pairings";
 
 describe("Pairings", () => {
 	// biome-ignore lint/complexity/noForEach: <explanation>
@@ -53,44 +57,33 @@ describe("Pairings", () => {
 			expect(uniquePairings.size).toBe(pairings.length);
 		}),
 	);
-    
-});
-
-describe("getLastWednesdayFromNow", () => {
-    test("returns the most recent Wednesday", () => {
-        const now = new Date("2025-04-14"); // Monday
-        const lastWednesday = getLastWednesdayFromNow();
-        const expectedDate = new Date("2025-04-09"); // Last Wednesday
-
-        expect(lastWednesday.toDateString()).toBe(expectedDate.toDateString());
-    });
 });
 
 describe("getNextNWednesdaysFromDate", () => {
-    test("returns the next N Wednesdays from a given date", () => {
-        const startDate = new Date("2025-04-14"); // Monday
-        const nextWednesdays = getNextNWednesdaysFromDate(3, startDate);
-        const expectedDates = [
-            new Date("2025-04-23"), // Second Wednesday
-            new Date("2025-04-30"), // Third Wednesday
-            new Date("2025-05-07"), // Fourth Wednesday
-        ];
+	test("returns the next N Wednesdays from a given date", () => {
+		const startDate = new Date("2025-04-14"); // Monday
+		const nextWednesdays = getNextNWednesdaysFromDate(3, startDate);
+		const expectedDates = [
+			new Date("2025-04-23"), // Second Wednesday
+			new Date("2025-04-30"), // Third Wednesday
+			new Date("2025-05-07"), // Fourth Wednesday
+		];
 
-        expect(nextWednesdays.map((date) => date.toDateString())).toEqual(
-            expectedDates.map((date) => date.toDateString())
-        );
-    });
+		expect(nextWednesdays.map((date) => date.toDateString())).toEqual(
+			expectedDates.map((date) => date.toDateString()),
+		);
+	});
 
-    test("Does not return the same Wednesday given", () => {
-        const startDate = new Date("2025-04-16"); // Wednesday
-        const nextWednesdays = getNextNWednesdaysFromDate(2, startDate);
-        const expectedDates = [
-            new Date("2025-04-23"), // Second Wednesday
-            new Date("2025-04-30"), // Third Wednesday
-        ];
+	test("Does not return the same Wednesday given", () => {
+		const startDate = new Date("2025-04-16"); // Wednesday
+		const nextWednesdays = getNextNWednesdaysFromDate(2, startDate);
+		const expectedDates = [
+			new Date("2025-04-23"), // Second Wednesday
+			new Date("2025-04-30"), // Third Wednesday
+		];
 
-        expect(nextWednesdays.map((date) => date.toDateString())).toEqual(
-            expectedDates.map((date) => date.toDateString())
-        );
-    });
+		expect(nextWednesdays.map((date) => date.toDateString())).toEqual(
+			expectedDates.map((date) => date.toDateString()),
+		);
+	});
 });

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { AddUserForm } from "../AddUserForm";
 import { addUser } from "@/app/actions/users";
 
-export default async function AddDiscordUser() {
+export default function AddDiscordUser() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const discordId = searchParams.get("discordId");
@@ -16,7 +16,6 @@ export default async function AddDiscordUser() {
 	) => {
 		await addUser({
 			...values,
-			birthday: values.birthday.toISOString(),
 		});
 		// Redirect to the users page after successful submission
 		router.push("/users");

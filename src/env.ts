@@ -11,6 +11,12 @@ export const env = createEnv({
 		DISCORD_APPLICATION_ID: z.string().min(1),
 		DISCORD_PUBLIC_KEY: z.string().min(1),
 		VERCEL_URL: z.string().email().optional(),
+
+		// Channels and guild ids
+		GUILD_ID: z.string().min(1),
+		DINNER_CHANNEL_ID: z.string().min(1),
+		BIRTHDAY_CHANNEL_ID: z.string().min(1),
+		GENERAL_CHANNEL_ID: z.string().min(1),
 	},
 	client: {
 		// NEXT_PUBLIC_PUBLISHABLE_KEY: z.string().min(1),

@@ -1,10 +1,8 @@
 // import { commands } from "@/lib/commands";
 import { auth } from "@/auth";
 import { commands } from "@/lib/commands";
-import {
-	InteractionType,
-	type APIInteraction,
-} from "@discordjs/core/http-only";
+import info from "@/lib/commands/info";
+import { InteractionType } from "@discordjs/core/http-only";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -19,8 +17,6 @@ export async function POST(req: NextRequest) {
 		);
 	}
 
-	body as APIInteraction;
-
 	if (body.type === InteractionType.Ping) {
 		return NextResponse.json({
 			type: 1, // Type 1 in a response is a Pong interaction response type.
@@ -29,7 +25,9 @@ export async function POST(req: NextRequest) {
 
 	try {
 		if (body.type === InteractionType.ApplicationCommand) {
-			const command = commands.find((c) => c.data.name === body.data.name);
+			const command = [...commands, ...info].find(
+				(c) => c.data.name === body.data.name,
+			);
 
 			if (!command) {
 				return Response.json({ error: "Command not found" }, { status: 404 });

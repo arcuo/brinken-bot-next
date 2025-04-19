@@ -9,7 +9,7 @@ import { updateUser } from "../actions/users";
 import { useState } from "react";
 
 export function EditUserDialog({ user }: { user: typeof users.$inferSelect }) {
-    const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 	// This component is a placeholder for the Edit User dialog.
 	// You can implement the actual logic to edit user details here.
 
@@ -33,11 +33,10 @@ export function EditUserDialog({ user }: { user: typeof users.$inferSelect }) {
 						await updateUser({
 							...user,
 							...values,
-							birthday: values.birthday.toISOString(),
 						});
-                        setIsOpen(false);
+						setIsOpen(false);
 					}}
-                    submitText="Update User"
+					submitText="Update User"
 				/>
 			</Dialog.DialogContent>
 		</Dialog.Dialog>
