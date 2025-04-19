@@ -4,7 +4,7 @@ import {
 	ButtonStyle,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { Command } from ".";
+import { createResponse, type Command } from ".";
 import { getDinnerSchedule } from "@/app/actions/dinners";
 import { DateTime } from "luxon";
 import { env } from "@/env";
@@ -17,8 +17,7 @@ const dinnerSchedule = {
 	async execute() {
 		const schedule = await getDinnerSchedule();
 
-		return {
-			type: 4,
+		return createResponse({
 			data: {
 				content: `# Dinner Schedule
 Here are the upcoming dinners in this server :spaghetti:
@@ -31,7 +30,7 @@ ${schedule
 	})
 	.join("\n")}`,
 			},
-		};
+		});
 	},
 } as const satisfies Command;
 

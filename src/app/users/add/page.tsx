@@ -3,8 +3,24 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { AddUserForm } from "../AddUserForm";
 import { addUser } from "@/app/actions/users";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
-export default function AddDiscordUser() {
+export default function SuspenseAddDiscordUser() {
+	return (
+		<Suspense
+			fallback={
+				<div>
+					<Spinner variant="ellipsis" size={32} />
+				</div>
+			}
+		>
+			<AddDiscordUser />
+		</Suspense>
+	);
+}
+
+function AddDiscordUser() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const discordId = searchParams.get("discordId");
