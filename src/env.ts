@@ -10,7 +10,7 @@ export const env = createEnv({
 		DISCORD_BOT_TOKEN: z.string().min(1),
 		DISCORD_APPLICATION_ID: z.string().min(1),
 		DISCORD_PUBLIC_KEY: z.string().min(1),
-		VERCEL_URL: z.string().optional(),
+		VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
 
 		// Channels and guild ids
 		GUILD_ID: z.string().min(1),

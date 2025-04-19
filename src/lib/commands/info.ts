@@ -14,7 +14,7 @@ export const infoCommand = {
 # Brinken Bot :robot:
 The Brinken Bot is a bot that reminds us about dinners, birthdays and house meetings. I've set up a website for the bot where you can manage the users and dinners. The Bot will check in every day and send messages to the correct channels if there is a birthday!
 
-Visit the website here ${env.VERCEL_URL ?? "http://localhost:3000"}
+Visit the website [here](${env.VERCEL_PROJECT_PRODUCTION_URL ?? "http://localhost:3000"})
 
 You can run the following commands:
 

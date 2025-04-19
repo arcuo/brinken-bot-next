@@ -17,7 +17,7 @@ export const addUserCommand = {
 		const name = body.member?.user.global_name;
 		const nickname = body.member?.nick;
 		const url = new URL(
-			`${env.VERCEL_URL ?? "http://localhost:3000"}/users/add`,
+			`${env.VERCEL_PROJECT_PRODUCTION_URL ?? "http://localhost:3000"}/users/add`,
 		);
 		url.searchParams.append("discordId", discordId ?? "");
 		url.searchParams.append("name", name ?? "");
@@ -57,7 +57,7 @@ export const viewUsersCommand = {
 							new ButtonBuilder()
 								.setLabel("View Users")
 								.setStyle(ButtonStyle.Link)
-								.setURL(`${env.VERCEL_URL ?? "http://localhost:3000"}/users`),
+								.setURL(`${env.VERCEL_PROJECT_PRODUCTION_URL ?? "http://localhost:3000"}/users`),
 						])
 						.toJSON(),
 				],
