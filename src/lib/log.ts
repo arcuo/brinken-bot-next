@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { logs } from "./db/schemas/logs";
 
-export function log<T extends object>(
+export async function log<T extends object>(
 	message: string,
 	opts?: { data?: T; logType?: "info" | "error" },
 ) {
@@ -11,9 +11,9 @@ export function log<T extends object>(
 		console.log(message, opts?.data);
 	}
 
-	db.insert(logs).values({ message, ...opts });
+	await db.insert(logs).values({ message, ...opts });
 }
 
-export function error<T extends object>(message: string, data?: T) {
-	log(message, { data, logType: "error" });
+export async function error<T extends object>(message: string, data?: T) {
+	await log(message, { data, logType: "error" });
 }

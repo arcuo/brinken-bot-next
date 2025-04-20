@@ -33,12 +33,11 @@ import {
 	updateDinner,
 	type DinnerDate,
 } from "../actions/dinners";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { User } from "@/lib/db/schemas/users";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@/components/ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { EllipsisIcon, Trash2Icon } from "lucide-react";
 
 declare module "@tanstack/react-table" {
@@ -164,6 +163,7 @@ export function DinnersTable({ data, users }: DataTableProps) {
 		setRows(data);
 	}, [data]);
 	const [loading, setLoading] = useState(false);
+	const [openReschedule, setOpenReschedule] = useState(false);
 
 	const table = useReactTable<DinnerDate>({
 		data: rows,
@@ -242,7 +242,60 @@ export function DinnersTable({ data, users }: DataTableProps) {
 					</TableBody>
 				</Table>
 			</div>
-			<DataTablePagination table={table} pageSize={8} />
+			<DataTablePagination
+				table={table}
+				pageSize={8}
+				action={
+					<DropdownMenu>
+						<DropdownMenuTrigger className="cursor-pointer" asChild>
+							<Button variant={"outline"} size={"icon"}>
+								<EllipsisIcon />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="start">
+							<DropdownMenuLabel>Actions</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem
+								variant="destructive"
+								onClick={() => setOpenReschedule(true)}
+							>
+								<Trash2Icon /> Reschedule dinners
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				}
+			/>
+			<Dialog.Dialog open={openReschedule} onOpenChange={setOpenReschedule}>
+				<Dialog.DialogContent>
+					<Dialog.DialogHeader>
+						<Dialog.DialogTitle>Reschedule dinners</Dialog.DialogTitle>
+						<Dialog.DialogDescription asChild>
+							<p>This will remove all dinners and add new dinners!</p>
+						</Dialog.DialogDescription>
+						<Dialog.DialogFooter>
+							<Dialog.DialogClose asChild>
+								<Button variant="secondary">Cancel</Button>
+							</Dialog.DialogClose>
+							<Dialog.DialogClose asChild>
+								<Button
+									variant="destructive"
+									onClick={async () => {
+										try {
+											await rescheduleDinners();
+										} catch (error) {
+											if (error instanceof Error) {
+												console.error(error.message);
+											}
+										}
+									}}
+								>
+									Reschedule
+								</Button>
+							</Dialog.DialogClose>
+						</Dialog.DialogFooter>
+					</Dialog.DialogHeader>
+				</Dialog.DialogContent>
+			</Dialog.Dialog>
 			<div className="flex gap-4 items-center">
 				<div className="flex-2" />
 				{loading && <Spinner size={15} variant="ellipsis" />}

@@ -1,6 +1,6 @@
 "use server";
 
-import { log } from "@/lib/log";
+import { log, error } from "@/lib/log";
 import {
 	handleWeekBeforeBirthday,
 	handleCleanUpBirthdayChannels,
@@ -25,36 +25,34 @@ import { handleHouseMeeting } from "./housemeeting";
  *   - Send message if house meeting is today
  */
 export async function handleDay() {
-	log("Handle day: Handling birthdays");
+	await log("Handling day");
 	try {
 		await handleCleanUpBirthdayChannels();
 		await handleWeekBeforeBirthday();
 		await handleDayBirthdayTomorrow();
-	} catch (error) {
-		if (error instanceof Error)
-			log(`Handle Day: Something when wrong with the birthdays: ${error.message}`, {
-				logType: "error",
-			});
+	} catch (err) {
+		if (err instanceof Error)
+			await error(
+				`Handle Day: Something when wrong with the birthdays: ${err.message}`,
+			);
 	}
 
-	log("Handle day: Handle dinners");
 	try {
 		await handleMondayBeforeDinner();
 		await handleDayOfDinner();
-	} catch (error) {
-		if (error instanceof Error)
-			log(`Handle Day: Something when wrong with the birthdays: ${error.message}`, {
-				logType: "error",
-			});
+	} catch (err) {
+		if (err instanceof Error)
+			await error(
+				`Handle Day: Something when wrong with the birthdays: ${err.message}`,
+			);
 	}
 
-	log("Handle day: Handle house meeting");
 	try {
 		await handleHouseMeeting();
-	} catch (error) {
-		if (error instanceof Error)
-			log(`Handle Day: Something when wrong with the house meeting: ${error.message}`, {
-				logType: "error",
-			});
+	} catch (err) {
+		if (err instanceof Error)
+			await error(
+				`Handle Day: Something when wrong with the house meeting: ${err.message}`,
+			);
 	}
 }

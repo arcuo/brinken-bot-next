@@ -4,5 +4,5 @@ CREATE TABLE "logs" (
 	"message" text NOT NULL,
 	"data" json,
 	"log_type" "log_type" DEFAULT 'info',
-	"created_at" time DEFAULT now()
+	"created_at" timestamp DEFAULT now() NOT NULL
 );

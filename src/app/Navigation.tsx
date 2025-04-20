@@ -35,6 +35,11 @@ export default function Navigation() {
 						<Button variant="link">Dinner dates</Button>
 					</Link>
 				</motion.li>
+				<motion.li variants={variants}>
+					<Link href="/logs">
+						<Button variant="link">Logs</Button>
+					</Link>
+				</motion.li>
 			</motion.ul>
 		</nav>
 	);

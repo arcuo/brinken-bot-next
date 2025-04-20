@@ -6,18 +6,18 @@ const nextConfig: NextConfig = {
 	experimental: {
 		nodeMiddleware: true,
 	},
-	webpack: (config) => {
-		config.externals = config.externals || {};
-		config.externals["zlib-sync"] = "zlib-sync";
+	// webpack: (config) => {
+	// 	config.externals = config.externals || {};
+	// 	config.externals["zlib-sync"] = "zlib-sync";
 
-		// Add node-loader for .node files
-		config.module.rules.push({
-			test: /\.node$/,
-			use: "node-loader",
-		});
+	// 	// Add node-loader for .node files
+	// 	config.module.rules.push({
+	// 		test: /\.node$/,
+	// 		use: "node-loader",
+	// 	});
 
-		return config;
-	},
+	// 	return config;
+	// },
 };
 
 export default nextConfig;

@@ -9,7 +9,7 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
 	const { valid, body } = await auth(req);
 	if (!valid) {
-		error("Discord-bot: Invalid request signature", { req: await req.json() });
+		await error("Discord-bot: Invalid request signature", { req: await req.json() });
 		return NextResponse.json(
 			{ error: "Invalid signature" },
 			{
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 				return Response.json({ error: "Command not found" }, { status: 404 });
 			}
 
-			log("Discord-bot: Handling command:", {
+			await log("Discord-bot: Handling command:", {
 				data: { commandName: command.data.name, body },
 			});
 
@@ -42,9 +42,9 @@ export async function POST(req: NextRequest) {
 			return Response.json(resp);
 		}
 	} catch (err) {
-		err instanceof Error
+		await (err instanceof Error
 			? error("Error handling interaction:", { message: err.message })
-			: error("Error handling interaction:", { err });
+			: error("Error handling interaction:", { err }));
 		return Response.json({ error: "Internal server error" }, { status: 500 });
 	}
 

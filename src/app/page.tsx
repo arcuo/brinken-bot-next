@@ -93,6 +93,7 @@ function ActionCard({
 				<AnimatePresence>
 					{success && (
 						<motion.div
+							key="success"
 							exit={{ x: -10, opacity: 0 }}
 							initial={{ x: -10, opacity: 0 }}
 							animate={{ x: 0, opacity: 1 }}
@@ -104,6 +105,7 @@ function ActionCard({
 
 					{!error && (
 						<motion.div
+							key="error"
 							exit={{ x: -10, opacity: 0 }}
 							initial={{ x: -10, opacity: 0 }}
 							animate={{ x: 0, opacity: 1 }}

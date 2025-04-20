@@ -8,24 +8,12 @@ import {
 	ChevronRight,
 	ChevronsLeft,
 	ChevronsRight,
-	EllipsisIcon,
-	Trash2Icon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import * as Dialog from "./dialog";
-import { rescheduleDinners } from "@/app/actions/dinners";
-import {
-	DropdownMenu,
-	DropdownMenuTrigger,
-	DropdownMenuContent,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+import { useEffect } from "react";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
 	return (
@@ -130,69 +118,22 @@ function TableCaption({
 interface DataTablePaginationProps<TData> {
 	table: TableTanstack<TData>;
 	pageSize?: number;
+	action?: React.ReactNode;
 }
 
 export function DataTablePagination<TData>({
 	table,
 	pageSize = 10,
+	action,
 }: DataTablePaginationProps<TData>) {
 	useEffect(() => {
 		table.setPageSize(pageSize);
 	}, [table, pageSize]);
 
-	const [openReschedule, setOpenReschedule] = useState(false);
-
 	return (
 		<div className="flex items-center justify-between px-2">
-			<DropdownMenu>
-				<DropdownMenuTrigger className="cursor-pointer">
-					<Button variant={"outline"} size={"icon"}>
-						<EllipsisIcon />
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="start">
-					<DropdownMenuLabel>Actions</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem
-						variant="destructive"
-						onClick={() => setOpenReschedule(true)}
-					>
-						<Trash2Icon /> Reschedule dinners
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+			{action ?? <div />}
 			<div className="flex items-center space-x-6 lg:space-x-8">
-				<Dialog.Dialog open={openReschedule} onOpenChange={setOpenReschedule}>
-					<Dialog.DialogContent>
-						<Dialog.DialogHeader>
-							<Dialog.DialogTitle>Reschedule dinners</Dialog.DialogTitle>
-							<Dialog.DialogDescription asChild>
-								<p>This will remove all dinners and add new dinners!</p>
-							</Dialog.DialogDescription>
-							<Dialog.DialogFooter>
-								<Dialog.DialogClose asChild>
-									<Button variant="secondary">Cancel</Button>
-								</Dialog.DialogClose>
-								<Dialog.DialogClose asChild>
-									<Button
-										variant="destructive"
-										onClick={async () => {
-											try {
-												await rescheduleDinners();
-											} catch (error) {
-												if (error instanceof Error) {
-													console.error(error.message);
-												}
-											}
-										}}
-									>
-										Reschedule
-									</Button>
-								</Dialog.DialogClose>
-							</Dialog.DialogFooter>
-						</Dialog.DialogHeader>
-					</Dialog.DialogContent>
-				</Dialog.Dialog>
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
 					Page {table.getState().pagination.pageIndex + 1} of{" "}
 					{table.getPageCount()}
