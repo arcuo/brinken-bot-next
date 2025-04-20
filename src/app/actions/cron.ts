@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@/lib/log";
 import {
 	handleWeekBeforeBirthday,
 	handleCleanUpBirthdayChannels,
@@ -9,9 +10,9 @@ import { handleDayOfDinner, handleMondayBeforeDinner } from "./dinners";
 import { handleHouseMeeting } from "./housemeeting";
 
 /**
- * 
+ *
  * Cron job for handling all the actions of the day
- * 
+ *
  * - Handle birthdays
  *   - Clean up birthday channels
  *   - Send message to birthday channel if birthday is in a week
@@ -24,32 +25,36 @@ import { handleHouseMeeting } from "./housemeeting";
  *   - Send message if house meeting is today
  */
 export async function handleDay() {
-	console.log("Handling birthdays");
+	log("Handle day: Handling birthdays");
 	try {
 		await handleCleanUpBirthdayChannels();
 		await handleWeekBeforeBirthday();
 		await handleDayBirthdayTomorrow();
 	} catch (error) {
 		if (error instanceof Error)
-			console.log(`Something when wrong with the birthdays: ${error.message}`);
+			log(`Handle Day: Something when wrong with the birthdays: ${error.message}`, {
+				logType: "error",
+			});
 	}
 
-	console.log("Handle dinners");
+	log("Handle day: Handle dinners");
 	try {
 		await handleMondayBeforeDinner();
 		await handleDayOfDinner();
 	} catch (error) {
 		if (error instanceof Error)
-			console.log(`Something when wrong with the birthdays: ${error.message}`);
+			log(`Handle Day: Something when wrong with the birthdays: ${error.message}`, {
+				logType: "error",
+			});
 	}
 
-	console.log("Handle house meeting");
+	log("Handle day: Handle house meeting");
 	try {
 		await handleHouseMeeting();
 	} catch (error) {
 		if (error instanceof Error)
-			console.log(
-				`Something when wrong with the house meeting: ${error.message}`,
-			);
+			log(`Handle Day: Something when wrong with the house meeting: ${error.message}`, {
+				logType: "error",
+			});
 	}
 }

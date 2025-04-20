@@ -7,6 +7,8 @@ import {
 	type Guild,
 	type GuildChannelManager,
 	type MessageCreateOptions,
+	MessageFlags,
+	MessageType,
 	OverwriteType,
 	PermissionsBitField,
 	type PollData,
@@ -88,9 +90,7 @@ export async function sendMessageToChannel(
 		console.error(`Channel is not a text channel: ${channelId}`);
 		return;
 	}
-	return channel.send(
-		typeof message === "function" ? await message(channel) : message,
-	);
+	return channel.send(typeof message === "function" ? await message(channel) : message);
 }
 
 export async function createPollToChannel(channelId: string, poll: PollData) {

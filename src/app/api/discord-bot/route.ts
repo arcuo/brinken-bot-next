@@ -2,13 +2,14 @@
 import { auth } from "@/auth";
 import { commands } from "@/lib/commands";
 import info from "@/lib/commands/info";
+import { error, log } from "@/lib/log";
 import { InteractionType } from "@discordjs/core/http-only";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	const { valid, body } = await auth(req);
 	if (!valid) {
-		console.error("Middleware: Invalid request signature");
+		error("Discord-bot: Invalid request signature", { req: await req.json() });
 		return NextResponse.json(
 			{ error: "Invalid signature" },
 			{
@@ -33,13 +34,17 @@ export async function POST(req: NextRequest) {
 				return Response.json({ error: "Command not found" }, { status: 404 });
 			}
 
+			log("Discord-bot: Handling command:", {
+				data: { commandName: command.data.name, body },
+			});
+
 			const resp = await command.execute(body);
 			return Response.json(resp);
 		}
-	} catch (error) {
-		error instanceof Error
-			? console.error("Error handling interaction:", error.message)
-			: console.error("Error handling interaction:", error);
+	} catch (err) {
+		err instanceof Error
+			? error("Error handling interaction:", { message: err.message })
+			: error("Error handling interaction:", { err });
 		return Response.json({ error: "Internal server error" }, { status: 500 });
 	}
 
