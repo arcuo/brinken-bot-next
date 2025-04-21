@@ -22,7 +22,7 @@ export default function Navigation() {
 			>
 				<motion.li variants={variants}>
 					<Link href="/">
-						<Button variant="link">Actions</Button>
+						<Button variant="link">Home</Button>
 					</Link>
 				</motion.li>
 				<motion.li variants={variants}>

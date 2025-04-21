@@ -14,9 +14,9 @@ export const env = createEnv({
 
 		// Channels and guild ids
 		GUILD_ID: z.string().min(1),
-		DINNER_CHANNEL_ID: z.string().min(1),
-		BIRTHDAY_CHANNEL_ID: z.string().min(1),
-		GENERAL_CHANNEL_ID: z.string().min(1),
+		DINNER_CHANNEL_ID: z.string().min(1).optional(),
+		BIRTHDAY_CHANNEL_ID: z.string().min(1).optional(),
+		GENERAL_CHANNEL_ID: z.string().min(1).optional(),
 	},
 	client: {
 		// NEXT_PUBLIC_PUBLISHABLE_KEY: z.string().min(1),

@@ -128,7 +128,10 @@ export async function updateDinner(dinner: typeof dinnerSchema.$inferSelect) {
 }
 
 /** Handle the monday before dinner. Notify chefs and send message for voting whether I'm coming */
-export async function handleMondayBeforeDinner(debugging = false) {
+export async function handleMondayBeforeDinner(
+	dinnerChannelId: string,
+	debugging = false,
+) {
 	const isMonday = DateTime.now().weekdayLong === "Monday";
 	if (!debugging && !isMonday) return;
 
@@ -146,7 +149,7 @@ export async function handleMondayBeforeDinner(debugging = false) {
 	).hours;
 
 	await sendMessageToChannel(
-		env.DINNER_CHANNEL_ID,
+		dinnerChannelId,
 		`
 # Dinner on Wednesday! :spaghetti:
 
@@ -158,7 +161,7 @@ export async function handleMondayBeforeDinner(debugging = false) {
 		`,
 	);
 
-	await createPollToChannel(env.DINNER_CHANNEL_ID, {
+	await createPollToChannel(dinnerChannelId, {
 		question: {
 			text: "Are you attending dinner on Wednesday?",
 		},
@@ -181,7 +184,10 @@ export async function handleMondayBeforeDinner(debugging = false) {
 	});
 }
 
-export async function handleDayOfDinner(debugging = false) {
+export async function handleDayOfDinner(
+	dinnerChannelId: string,
+	debugging = false,
+) {
 	const isWednesday = DateTime.now().weekdayLong === "Wednesday";
 	if (!isWednesday && !debugging) {
 		return;
@@ -195,7 +201,7 @@ export async function handleDayOfDinner(debugging = false) {
 	}
 
 	await sendMessageToChannel(
-		env.DINNER_CHANNEL_ID,
+		dinnerChannelId,
 		`
 # Dinner day :spaghetti:
 @everyone today is dinner day with 

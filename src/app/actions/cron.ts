@@ -5,9 +5,12 @@ import {
 	handleWeekBeforeBirthday,
 	handleCleanUpBirthdayChannels,
 	handleDayBirthdayTomorrow,
+	handleBirthdayToday,
 } from "./birthdays";
 import { handleDayOfDinner, handleMondayBeforeDinner } from "./dinners";
 import { handleHouseMeeting } from "./housemeeting";
+import { getAllSettings } from "./settings";
+import { env } from "@/env";
 
 /**
  *
@@ -25,11 +28,20 @@ import { handleHouseMeeting } from "./housemeeting";
  *   - Send message if house meeting is today
  */
 export async function handleDay() {
+	const settings = await getAllSettings();
 	await log("Handling day");
 	try {
 		await handleCleanUpBirthdayChannels();
 		await handleWeekBeforeBirthday();
 		await handleDayBirthdayTomorrow();
+		const birthdayChannelId =
+			settings.birthday_channel_id?.discordChannelId ?? env.BIRTHDAY_CHANNEL_ID;
+		if (!birthdayChannelId) {
+			throw Error(
+				"No birthday channel id found. Please set it in the settings.",
+			);
+		}
+		await handleBirthdayToday(birthdayChannelId);
 	} catch (err) {
 		if (err instanceof Error)
 			await error(
@@ -38,8 +50,13 @@ export async function handleDay() {
 	}
 
 	try {
-		await handleMondayBeforeDinner();
-		await handleDayOfDinner();
+		const dinnerChannelId =
+			settings.dinner_channel_id?.discordChannelId ?? env.DINNER_CHANNEL_ID;
+		if (!dinnerChannelId) {
+			throw Error("No dinner channel id found. Please set it in the settings.");
+		}
+		await handleMondayBeforeDinner(dinnerChannelId);
+		await handleDayOfDinner(dinnerChannelId);
 	} catch (err) {
 		if (err instanceof Error)
 			await error(
@@ -48,7 +65,14 @@ export async function handleDay() {
 	}
 
 	try {
-		await handleHouseMeeting();
+		const generalChannelId =
+			settings.general_channel_id?.discordChannelId ?? env.GENERAL_CHANNEL_ID;
+		if (!generalChannelId) {
+			throw Error(
+				"No general channel id found. Please set it in the settings.",
+			);
+		}
+		await handleHouseMeeting(generalChannelId);
 	} catch (err) {
 		if (err instanceof Error)
 			await error(

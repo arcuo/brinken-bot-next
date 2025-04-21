@@ -1,5 +1,8 @@
 "use server";
-import { getBirthdayUsersAndResponsible } from "@/app/actions/users";
+import {
+	getAllUsers,
+	getBirthdayUsersAndResponsible,
+} from "@/app/actions/users";
 import { db } from "@/lib/db";
 import { channels } from "@/lib/db/schemas/channels";
 import {
@@ -46,6 +49,25 @@ Remember to send your birthday wishes to <@${ch.birthdayRecipientDiscordId}> on 
         `,
 			),
 		),
+	);
+}
+
+export async function handleBirthdayToday(birthdayChannelId: string) {
+	const users = await getAllUsers();
+	const birthdays = users.filter(
+		(u) => DateTime.fromJSDate(u.birthday).diffNow("days").days === 0,
+	);
+	if (!birthdays.length) return;
+
+	await sendMessageToChannel(
+		birthdayChannelId,
+		`
+# Birthdays! :flag_dk: :tada:
+
+Happy birthday to ${birthdays.map((u) => `<@${u.discordId}>`).join(", ")}!
+
+Remember to send your birthday wishes!.
+        `,
 	);
 }
 

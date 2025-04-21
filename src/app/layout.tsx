@@ -29,9 +29,9 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} font-[geisha sans] antialiased`}
 			>
-				<main className="grid grid-cols-[1fr_2fr] items-center px-[20%] py-[10%] gap-4">
+				<main className="grid grid-cols-[min-content_1fr] items-center px-[20%] py-[10%] gap-4">
 					<div className="flex flex-col gap-4 pr-4 self-start">
-						<header className="w-100 mb-10">
+						<header className="w-70 mb-10">
 							<h1 className="font-bold text-2xl">Brinken Bot</h1>
 							<p>Hello and welcome to the bot</p>
 						</header>

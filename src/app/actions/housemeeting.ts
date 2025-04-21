@@ -1,8 +1,7 @@
-import { env } from "@/env";
 import { sendMessageToChannel } from "@/lib/discord/client";
 import { DateTime } from "luxon";
 
-export async function handleHouseMeeting() {
+export async function handleHouseMeeting(generalChannelId: string) {
 	// Check if this is the last wednesday of the month
 
 	const lastWednesday = getLastWednesdayOfMonth();
@@ -12,7 +11,7 @@ export async function handleHouseMeeting() {
 
 	if (lastWednesday.date.diffNow("days").days <= 2) {
 		sendMessageToChannel(
-			env.GENERAL_CHANNEL_ID,
+			generalChannelId,
 			`
 # House Meeting
 Remember that this Wednesday is the last Wednesday of the month and that we will have a house meeting!
@@ -22,7 +21,7 @@ Remember that this Wednesday is the last Wednesday of the month and that we will
 
 	if (lastWednesday.date.day === DateTime.now().day) {
 		sendMessageToChannel(
-			env.GENERAL_CHANNEL_ID,
+			generalChannelId,
 			`
 # House Meeting
 Remember that this is the last Wednesday of the month and the house meeting is tonight at 18:00!
