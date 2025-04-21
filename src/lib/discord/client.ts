@@ -12,6 +12,7 @@ import {
 	OverwriteType,
 	PermissionsBitField,
 	type PollData,
+	Routes,
 	TextChannel,
 } from "discord.js";
 import type { DateTime } from "luxon";
@@ -53,7 +54,6 @@ export async function deleteMessage(channelId: string, messageId: string) {
 
 	const messages = await channel.messages.fetch();
 	const lastMessage = messages.first();
-	console.log(lastMessage);
 
 	return await channel.messages.delete(messageId);
 }
@@ -90,7 +90,10 @@ export async function sendMessageToChannel(
 		console.error(`Channel is not a text channel: ${channelId}`);
 		return;
 	}
-	return channel.send(typeof message === "function" ? await message(channel) : message);
+
+	return channel.send(
+		typeof message === "function" ? await message(channel) : message,
+	);
 }
 
 export async function createPollToChannel(channelId: string, poll: PollData) {

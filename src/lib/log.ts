@@ -8,7 +8,7 @@ export async function log<T extends object>(
 	if (opts?.logType === "error") {
 		console.error(message, opts.data);
 	} else {
-		console.log(message, opts?.data);
+		console.log(message);
 	}
 
 	await db.insert(logs).values({ message, ...opts });

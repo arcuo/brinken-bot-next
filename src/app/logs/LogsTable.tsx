@@ -20,6 +20,7 @@ import {
 
 import { useEffect, useState } from "react";
 import {
+	ArrowDownFromLine,
 	EllipsisIcon,
 	EyeIcon,
 	MessageCircleIcon,
@@ -39,7 +40,7 @@ import {
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import * as Dialog from "@/components/ui/dialog";
-import { clearLogs } from "../actions/logs";
+import { clearLogs, reloadLogs } from "../actions/logs";
 
 type Log = typeof logs.$inferSelect;
 
@@ -179,6 +180,9 @@ export function LogsTable({ data }: DataTableProps) {
 								onClick={() => setOpenClearTable(true)}
 							>
 								<Trash2Icon /> Clear logs
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => reloadLogs()}>
+								Reload logs <ArrowDownFromLine />
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>

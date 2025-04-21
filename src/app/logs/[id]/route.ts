@@ -13,7 +13,6 @@ export async function GET(
 		.from(logs)
 		.where(eq(logs.id, Number(id)))
 		.limit(1);
-	console.log(log);
 
 	return Response.json(log[0].data, { status: 200 });
 }

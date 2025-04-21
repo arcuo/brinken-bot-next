@@ -9,6 +9,7 @@ export default async function Logs() {
 		.select()
 		.from(logsSchema)
 		.orderBy(desc(logsSchema.createdAt));
+
 	return (
 		<PageTransitionWrapper className="container flex gap-4 flex-col">
 			<LogsTable data={logs} />

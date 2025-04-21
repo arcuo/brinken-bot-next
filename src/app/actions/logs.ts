@@ -6,5 +6,9 @@ import { revalidatePath } from "next/cache";
 
 export async function clearLogs() {
 	await db.delete(logs);
-    revalidatePath("/logs");
+	revalidatePath("/logs");
+}
+
+export async function reloadLogs() {
+	revalidatePath("/logs");
 }
