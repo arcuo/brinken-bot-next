@@ -3,6 +3,14 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./Navigation";
 import { PageTransition } from "./PageTransition";
+import {
+	ClerkProvider,
+	SignInButton,
+	SignUpButton,
+	SignedIn,
+	SignedOut,
+	UserButton,
+} from "@clerk/nextjs";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -25,23 +33,30 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} font-[geisha sans] antialiased`}
-			>
-				<main className="grid grid-cols-[min-content_1fr] items-center px-[20%] py-[10%] gap-4">
-					<div className="flex flex-col gap-4 pr-4 self-start">
-						<header className="w-70 mb-10">
-							<h1 className="font-bold text-2xl">Brinken Bot</h1>
-							<p>Hello and welcome to the bot</p>
-						</header>
-						<Navigation />
-					</div>
-					<PageTransition>
-						<div className="flex justify-center items-center">{children}</div>
-					</PageTransition>
-				</main>
-			</body>
-		</html>
+		<ClerkProvider>
+			<html lang="en">
+				<body
+					className={`${geistSans.variable} ${geistMono.variable} font-[geisha sans] antialiased`}
+				>
+					<header className="flex justify-end items-center p-4 gap-4 h-16">
+						<SignedIn>
+							<UserButton />
+						</SignedIn>
+					</header>
+					<main className="grid grid-cols-[min-content_1fr] items-center px-[20%] py-[10%] gap-4">
+						<div className="flex flex-col gap-4 pr-4 self-start">
+							<header className="w-70 mb-10">
+								<h1 className="font-bold text-2xl">Brinken Bot</h1>
+								<p>Hello and welcome to the bot</p>
+							</header>
+							<Navigation />
+						</div>
+						<PageTransition>
+							<div className="flex justify-center items-center">{children}</div>
+						</PageTransition>
+					</main>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }

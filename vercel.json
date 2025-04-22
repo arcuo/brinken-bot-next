@@ -1,7 +1,7 @@
 {
     "crons": [
       {
-        "path": "/api/discord-bot/cron/day",
+        "path": "/api/cron/day",
         "schedule": "0 9 * * *"
       }
     ]

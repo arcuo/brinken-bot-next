@@ -32,7 +32,6 @@ const formSchema = z.object({
 	name: z.string().min(1, "Name is required"),
 	nickname: z.string().optional(),
 	birthday: z.date(),
-	phone: z.string().optional(),
 	discordId: z.string().min(1, "Discord ID is required"),
 });
 
@@ -61,7 +60,6 @@ export function AddUserForm({
 		defaultValues: {
 			name: "",
 			...user,
-			phone: user?.phone || "",
 			nickname: user?.nickname || "",
 			birthday: user?.birthday ? new Date(user.birthday) : undefined,
 		},
@@ -113,22 +111,6 @@ export function AddUserForm({
 								/>
 							</FormControl>
 							<FormDescription>Birthday of the user</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="phone"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Phone</FormLabel>
-							<FormControl>
-								<Input placeholder="12345678" {...field} />
-							</FormControl>
-							<FormDescription>
-								Optional phone number of the user
-							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}

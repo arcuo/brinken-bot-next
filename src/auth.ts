@@ -2,10 +2,10 @@ import type { APIInteraction } from "discord.js";
 import type { NextRequest } from "next/server";
 import nacl from "tweetnacl";
 
-export async function auth(request: NextRequest): Promise<
+export async function discord_auth(request: NextRequest): Promise<
 	| {
 			valid: false;
-			body: null;
+			body: APIInteraction | null;
 	  }
 	| { valid: true; body: APIInteraction }
 > {

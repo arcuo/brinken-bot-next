@@ -19,7 +19,7 @@
 	"linter": {
 		"enabled": true,
 		"ignore": [
-			"supabase/**"
+			".next"
 		],
 		"rules": {
 			"recommended": true,

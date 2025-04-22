@@ -6,13 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "biome lint",
     "discord:register": "bun scripts/registerCommands.ts",
     "discord:interaction-url": "bun scripts/setApplicationInteractionUrl.ts",
     "db:generate": "bun drizzle-kit generate",
     "db:migrate": "bun drizzle-kit migrate"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.17.0",
     "@discordjs/core": "^2.0.1",
     "@discordjs/rest": "^2.4.3",
     "@hookform/resolvers": "^5.0.1",

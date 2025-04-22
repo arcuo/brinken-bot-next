@@ -1,5 +1,5 @@
 // import { commands } from "@/lib/commands";
-import { auth } from "@/auth";
+import { discord_auth } from "@/auth";
 import { commands } from "@/lib/commands";
 import info from "@/lib/commands/info";
 import { error, log } from "@/lib/log";
@@ -7,9 +7,11 @@ import { InteractionType } from "@discordjs/core/http-only";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-	const { valid, body } = await auth(req);
+	const { valid, body } = await discord_auth(req);
+
 	if (!valid) {
-		await error("Discord-bot: Invalid request signature", { req: await req.json() });
+		if (body?.type !== InteractionType.Ping)
+			await error("Discord-bot: Invalid request signature", { body });
 		return NextResponse.json(
 			{ error: "Invalid signature" },
 			{
