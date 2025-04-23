@@ -24,6 +24,8 @@ export const env = createEnv({
 
 		// CLERK
 		CLERK_SECRET_KEY: z.string().min(1),
+
+		CRON_SECRET: z.string().min(8),
 	},
 	client: {
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),

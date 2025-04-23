@@ -1,11 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isDiscordRoute = createRouteMatcher(['/api/discord-bot']);
+const isNotProtected = createRouteMatcher(['/api/discord-bot', '/api/cron']);
 
 
 export default clerkMiddleware(
 	async (auth, req) => {
-        if (isDiscordRoute(req)) {
+        if (isNotProtected(req)) {
             return;
         }
 		await auth.protect();

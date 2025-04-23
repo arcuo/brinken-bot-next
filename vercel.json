@@ -1,9 +1,8 @@
 {
-    "crons": [
-      {
-        "path": "/api/cron/day",
-        "schedule": "0 8 * * *",
-        "name": "Daily Brinken CRON job"
-      }
-    ]
-  }
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 8 * * *"
+    }
+  ]
+}
