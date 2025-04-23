@@ -15,17 +15,15 @@ export default async function Home() {
 	]);
 
 	return (
-		<PageTransitionWrapper>
-			<div className="flex gap-5">
-				<Image
-					alt="Brinken Bot Hello"
-					src={botImage}
-					className="size-[400px] rounded-2xl object-cover shadow-lg shadow-black/30"
-				/>
-				<div className="flex flex-col gap-2">
-					<RunActionCard />
-					<SettingsCard settings={settings} channels={channels} />
-				</div>
+		<PageTransitionWrapper className="flex w-full items-center justify-center gap-5 max-lg:flex-col">
+			<Image
+				alt="Brinken Bot Hello"
+				src={botImage}
+				className="rounded-2xl object-cover object-center shadow-black/30 shadow-lg lg:size-[400px]"
+			/>
+			<div className="flex max-w-full flex-col gap-2">
+				<RunActionCard />
+				<SettingsCard settings={settings} channels={channels} />
 			</div>
 		</PageTransitionWrapper>
 	);

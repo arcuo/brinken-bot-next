@@ -3,14 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./Navigation";
 import { PageTransition } from "./PageTransition";
-import {
-	ClerkProvider,
-	SignInButton,
-	SignUpButton,
-	SignedIn,
-	SignedOut,
-	UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider, SignOutButton, SignedIn } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { LogOutIcon } from "lucide-react";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -36,24 +31,27 @@ export default function RootLayout({
 		<ClerkProvider>
 			<html lang="en">
 				<body
-					className={`${geistSans.variable} ${geistMono.variable} font-[geisha sans] antialiased`}
+					className={`${geistSans.variable} ${geistMono.variable} grid h-screen w-screen grid-rows-[auto_1fr] antialiased`}
 				>
-					<header className="flex justify-end items-center p-4 gap-4 h-16">
-						<SignedIn>
-							<UserButton />
-						</SignedIn>
-					</header>
-					<main className="grid grid-cols-[min-content_1fr] items-center px-[20%] py-[10%] gap-4">
-						<div className="flex flex-col gap-4 pr-4 self-start">
-							<header className="w-70 mb-10">
-								<h1 className="font-bold text-2xl">Brinken Bot</h1>
-								<p>Hello and welcome to the bot</p>
-							</header>
-							<Navigation />
+					<header className="grid w-full grid-cols-2 items-center justify-center gap-2 px-10 py-5 lg:grid-cols-3">
+						<div>
+							<h1 className="font-bold text-2xl">Brinken Bot</h1>
+							<p>Hello and welcome to the bot</p>
 						</div>
-						<PageTransition>
-							<div className="flex justify-center items-center">{children}</div>
-						</PageTransition>
+						<div className="max-lg:flex max-lg:flex-col max-lg:items-end max-lg:gap-2 max-lg:place-self-end lg:contents">
+							<Navigation />
+
+							<SignedIn>
+								<SignOutButton>
+									<Button variant="outline" className="justify-self-end">
+										<LogOutIcon /> <span className="hidden md:block">Sign out</span>
+									</Button>
+								</SignOutButton>
+							</SignedIn>
+						</div>
+					</header>
+					<main className="flex items-center justify-center gap-4 px-8 lg:px-[20%] lg:py-20">
+						<PageTransition>{children}</PageTransition>
 					</main>
 				</body>
 			</html>

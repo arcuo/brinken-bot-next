@@ -29,7 +29,7 @@ export function RunActionCard() {
 		return { success: true };
 	};
 	return (
-		<Card.Card className="min-w-100">
+		<Card.Card className="w-100 max-w-full">
 			<Card.CardHeader>
 				<Card.CardTitle>Daily Check</Card.CardTitle>
 				<Card.CardDescription>
@@ -70,7 +70,7 @@ export function RunActionCard() {
 							exit={{ x: -10, opacity: 0 }}
 							initial={{ x: -10, opacity: 0 }}
 							animate={{ x: 0, opacity: 1 }}
-							className="text-green-800 text-sm ml-2"
+							className="ml-2 text-green-800 text-sm"
 						>
 							Success!
 						</motion.div>
@@ -82,7 +82,7 @@ export function RunActionCard() {
 							exit={{ x: -10, opacity: 0 }}
 							initial={{ x: -10, opacity: 0 }}
 							animate={{ x: 0, opacity: 1 }}
-							className="text-green-800 text-sm ml-2"
+							className="ml-2 text-green-800 text-sm"
 						>
 							<Tooltip>
 								<TooltipTrigger asChild>Something went wrong</TooltipTrigger>

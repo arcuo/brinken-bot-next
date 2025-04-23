@@ -11,7 +11,7 @@ export default async function Logs() {
 		.orderBy(desc(logsSchema.createdAt));
 
 	return (
-		<PageTransitionWrapper className="container flex gap-4 flex-col">
+		<PageTransitionWrapper className="container flex flex-col gap-4">
 			<LogsTable data={logs} />
 		</PageTransitionWrapper>
 	);

@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 				return Response.json({ error: "Command not found" }, { status: 404 });
 			}
 
-			await log("Discord-bot: Handling command:", {
+			await log(`Discord-bot: Handling command: ${command.data.name}`, {
 				data: { commandName: command.data.name, body },
 			});
 

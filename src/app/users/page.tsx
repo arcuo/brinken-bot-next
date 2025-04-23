@@ -9,8 +9,8 @@ export default async function UsersPage() {
 	const users = await db.select().from(usersSchema);
 
 	return (
-		<PageTransitionWrapper className="container flex gap-4 flex-col">
-			<h2 className="text-lg mb-4 text-neutral-600">Users</h2>
+		<PageTransitionWrapper className="container flex flex-col gap-4">
+			<h2 className="mb-4 text-lg text-neutral-600">Users</h2>
 			<UsersTable data={users} />
 			<div>
 				<AddUserDialog />

@@ -25,7 +25,11 @@ import { EditUserDialog } from "./EditUserDialog";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const columns: ColumnDef<User>[] = [
 	{
@@ -40,28 +44,28 @@ const columns: ColumnDef<User>[] = [
 		accessorKey: "birthday",
 		header: ({ column }) => {
 			return (
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								variant="ghost"
-								onClick={() =>
-									column.toggleSorting(column.getIsSorted() === "asc")
-								}
-							>
-								Birthday
-								{!column.getIsSorted() ? (
-									<ArrowUpDown className="ml-2 h-4 w-4" />
-								) : column.getIsSorted() === "asc" ? (
-									<ArrowUp className="ml-2 h-4 w-4" />
-								) : (
-									<ArrowDown className="ml-2 h-4 w-4" />
-								)}
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>Sorting by the birthday of the user (ignoring the year).</p>
-						</TooltipContent>
-					</Tooltip>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button
+							variant="ghost"
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === "asc")
+							}
+						>
+							Birthday
+							{!column.getIsSorted() ? (
+								<ArrowUpDown className="ml-2 h-4 w-4" />
+							) : column.getIsSorted() === "asc" ? (
+								<ArrowUp className="ml-2 h-4 w-4" />
+							) : (
+								<ArrowDown className="ml-2 h-4 w-4" />
+							)}
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>Sorting by the birthday of the user (ignoring the year).</p>
+					</TooltipContent>
+				</Tooltip>
 			);
 		},
 		sortingFn: (a, b) => {
@@ -81,10 +85,6 @@ const columns: ColumnDef<User>[] = [
 		},
 	},
 	{
-		accessorKey: "phone",
-		header: "Phone",
-	},
-	{
 		accessorKey: "discordId",
 		header: "Discord ID",
 	},
@@ -94,7 +94,7 @@ const columns: ColumnDef<User>[] = [
 		cell({ row }) {
 			const user = row.original;
 			return (
-				<div className="flex gap-2 justify-end">
+				<div className="flex justify-end gap-2">
 					<DeleteUserDialog userId={user.id} userName={user.name} />
 					<EditUserDialog user={user} />
 				</div>

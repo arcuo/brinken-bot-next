@@ -51,7 +51,7 @@ const columns = [
 		header: "Type",
 		cell: ({ cell }) => {
 			return cell.getValue() === "error" ? (
-				<MessageCircleWarningIcon className="text-red-500 size-5" />
+				<MessageCircleWarningIcon className="size-5 text-red-500" />
 			) : (
 				<MessageCircleIcon className="size-5" />
 			);

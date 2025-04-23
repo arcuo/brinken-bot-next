@@ -28,6 +28,21 @@
 					"level": "off"
 				}
 			},
+			"nursery": {
+				"useSortedClasses": {
+					"level": "warn",
+					"options": {
+						"attributes": [
+							"classList"
+						],
+						"functions": [
+							"clsx",
+							"cva",
+							"tw"
+						]
+					}
+				}
+			},
 			"suspicious": {
 				"noExplicitAny": {
 					"level": "off"

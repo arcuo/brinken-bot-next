@@ -296,10 +296,10 @@ export function DinnersTable({ data, users }: DataTableProps) {
 					</Dialog.DialogHeader>
 				</Dialog.DialogContent>
 			</Dialog.Dialog>
-			<div className="flex gap-4 items-center">
+			<div className="flex items-center gap-4">
 				<div className="flex-2" />
 				{loading && <Spinner size={15} variant="ellipsis" />}
-				<span className="text-sm text-neutral-600 self-end">
+				<span className="self-end text-neutral-600 text-sm">
 					Click on a chef to change them
 				</span>
 			</div>

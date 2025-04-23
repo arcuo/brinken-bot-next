@@ -12,9 +12,9 @@ export default async function DinnersPage() {
 	]);
 
 	return (
-		<PageTransitionWrapper className="container flex flex-col gap-6">
+		<PageTransitionWrapper className="container flex flex-col gap-4">
 			<h2 className="text-lg text-neutral-600">Dinner Schedule</h2>
-			<p className="text-sm text-neutral-600 -mt-4">
+			<p className="-mt-4 text-neutral-600 text-sm">
 				Today is: {DateTime.now().toFormat("EEEE, dd LLL yyyy")}
 			</p>
 			<DinnersTable data={dinners} users={users} />

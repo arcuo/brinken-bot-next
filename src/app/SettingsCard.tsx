@@ -80,10 +80,10 @@ export function SettingsCard({
 						</Dialog.DialogDescription>
 					</Dialog.DialogHeader>
 
-					<div className="text-sm flex flex-col gap-2">
+					<div className="flex flex-col gap-2 text-sm">
 						{Object.entries(settings).map(([settingId, value]) => (
 							<div
-								className="flex justify-between items-start gap-2"
+								className="flex items-start justify-between gap-2"
 								key={settingId}
 							>
 								<div className="flex flex-col gap-1">
