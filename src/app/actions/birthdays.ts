@@ -42,12 +42,11 @@ export async function handleDayBirthdayTomorrow() {
 
 	await Promise.all(
 		bdchannels.map((ch) =>
-			sendMessageToChannel(
-				ch.discordChannelId,
-				`
+			sendMessageToChannel(ch.discordChannelId, {
+				content: `
 Remember to send your birthday wishes to <@${ch.birthdayRecipientDiscordId}> on ${DateTime.fromJSDate(ch.birthdayDate).toFormat("dd/MM/yyyy")}.
         `,
-			),
+			}),
 		),
 	);
 }
@@ -59,16 +58,15 @@ export async function handleBirthdayToday(birthdayChannelId: string) {
 	);
 	if (!birthdays.length) return;
 
-	await sendMessageToChannel(
-		birthdayChannelId,
-		`
+	await sendMessageToChannel(birthdayChannelId, {
+		content: `
 # Birthdays! :flag_dk: :tada:
 
 Happy birthday to ${birthdays.map((u) => `<@${u.discordId}>`).join(", ")}!
 
 Remember to send your birthday wishes!.
         `,
-	);
+	});
 }
 
 /** Clean up birthday channels a week after the birthday */

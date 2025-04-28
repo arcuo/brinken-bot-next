@@ -10,23 +10,21 @@ export async function handleHouseMeeting(generalChannelId: string) {
 	}
 
 	if (lastWednesday.date.diffNow("days").days <= 2) {
-		sendMessageToChannel(
-			generalChannelId,
-			`
+		sendMessageToChannel(generalChannelId, {
+			content: `
 # House Meeting
 Remember that this Wednesday is the last Wednesday of the month and that we will have a house meeting!
 			`,
-		);
+		});
 	}
 
 	if (lastWednesday.date.day === DateTime.now().day) {
-		sendMessageToChannel(
-			generalChannelId,
-			`
+		sendMessageToChannel(generalChannelId, {
+			content: `
 # House Meeting
 Remember that this is the last Wednesday of the month and the house meeting is tonight at 18:00!
 			`,
-		);
+		});
 	}
 }
 

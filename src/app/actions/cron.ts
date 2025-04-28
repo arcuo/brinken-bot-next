@@ -60,7 +60,7 @@ export async function handleDay() {
 	} catch (err) {
 		if (err instanceof Error)
 			await error(
-				`Handle Day: Something when wrong with the birthdays: ${err.message}`,
+				`Handle Day: Something when wrong with the dinners: ${err.message}`,
 			);
 	}
 

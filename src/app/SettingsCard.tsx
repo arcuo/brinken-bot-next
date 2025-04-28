@@ -11,7 +11,7 @@ import {
 	getSettingName,
 	type SettingId,
 } from "@/lib/db/schemas/settings";
-import type { APIChannel } from "discord.js";
+import type { APIChannel } from "@discordjs/core/http-only";
 import {
 	Select,
 	SelectContent,

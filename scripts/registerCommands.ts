@@ -1,6 +1,7 @@
 import { commands } from "@/lib/commands";
 import info from "@/lib/commands/info";
-import { REST, Routes, type APIApplicationCommand } from "discord.js";
+import { Routes, type APIApplicationCommand } from "@discordjs/core/http-only";
+import { REST } from "@discordjs/rest";
 
 async function registerCommands() {
 	const token = process.env.DISCORD_BOT_TOKEN;

@@ -148,9 +148,8 @@ export async function handleMondayBeforeDinner(
 		"hours",
 	).hours;
 
-	await sendMessageToChannel(
-		dinnerChannelId,
-		`
+	await sendMessageToChannel(dinnerChannelId, {
+		content: `
 # Dinner on Wednesday! :spaghetti:
 
 @everyone We are having our regular dinner date on Wednesday! It will be awesome to see you all there! :tada:
@@ -159,7 +158,7 @@ export async function handleMondayBeforeDinner(
 **Sous chef**: <@${nextDinnerDay.souschef.discordId}>
 
 		`,
-	);
+	});
 
 	await createPollToChannel(dinnerChannelId, {
 		question: {
@@ -200,13 +199,12 @@ export async function handleDayOfDinner(
 		);
 	}
 
-	await sendMessageToChannel(
-		dinnerChannelId,
-		`
+	await sendMessageToChannel(dinnerChannelId, {
+		content: `
 # Dinner day :spaghetti:
 @everyone today is dinner day with 
 **Head chef**: <@${thisDinnerDay.headchef.discordId}>
 **Sous chef**: <@${thisDinnerDay.souschef.discordId}>
 		`,
-	);
+	});
 }

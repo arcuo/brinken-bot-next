@@ -2,10 +2,20 @@
 
 import { env } from "@/env";
 import { REST } from "@discordjs/rest";
-import { ChannelType, Routes, type APIGuildChannel } from "discord.js";
+import {
+	ChannelType,
+	GuildsAPI,
+	type APIGuildChannel,
+} from "@discordjs/core/http-only";
 
 const rest = new REST().setToken(env.DISCORD_BOT_TOKEN!);
 
-export async function getChannels(): Promise<APIGuildChannel<any>[]> {
-	return (await rest.get(Routes.guildChannels(env.GUILD_ID)) as unknown as APIGuildChannel<any>[]).filter((ch) => ch.type === ChannelType.GuildText);
+const guildsApi = new GuildsAPI(rest);
+
+export async function getChannels(
+	guildId = env.GUILD_ID,
+): Promise<APIGuildChannel<any>[]> {
+	return (
+		(await guildsApi.getChannels(guildId)) as unknown as APIGuildChannel<any>[]
+	).filter((ch) => ch.type === ChannelType.GuildText);
 }
