@@ -1,5 +1,9 @@
 import { sendMessageToChannel } from "@/lib/discord/client";
 import { DateTime } from "luxon";
+import * as cron from "cron";
+
+const wednesdayCron = new cron.CronTime("0 0 * * wed");
+const mondayCron = new cron.CronTime("0 0 * * mon");
 
 export async function handleHouseMeeting(generalChannelId: string) {
 	// Check if this is the last wednesday of the month
@@ -9,11 +13,11 @@ export async function handleHouseMeeting(generalChannelId: string) {
 		return;
 	}
 
-	if (lastWednesday.date.diffNow("days").days <= 2) {
+	if (lastWednesday.date.diffNow("days").days === 2) {
 		sendMessageToChannel(generalChannelId, {
 			content: `
-# House Meeting
-Remember that this Wednesday is the last Wednesday of the month and that we will have a house meeting!
+# House Meeting :house-with-garden:
+Remember that this coming Wednesday that we will have a house meeting!
 			`,
 		});
 	}
@@ -21,7 +25,7 @@ Remember that this Wednesday is the last Wednesday of the month and that we will
 	if (lastWednesday.date.day === DateTime.now().day) {
 		sendMessageToChannel(generalChannelId, {
 			content: `
-# House Meeting
+# House Meeting :house-with-garden:
 Remember that this is the last Wednesday of the month and the house meeting is tonight at 18:00!
 			`,
 		});
@@ -37,27 +41,24 @@ export function getLastWednesdayOfMonth(date?: DateTime):
 			success: true;
 			date: DateTime;
 	  } {
-	// Get the last wednesday of the month
-	const today = date ?? DateTime.now();
+	const from = date ?? DateTime.now();
 
-	// Get last day of the month
-	let current = DateTime.fromObject({
-		year: today.year,
-		month: today.month,
-		day: today.daysInMonth,
-	});
+	const currentMonth = from.month;
+	let nextWednesday = wednesdayCron.getNextDateFrom(from);
 
-	let timeout = 0;
-	while (current.weekdayLong !== "Wednesday") {
-		timeout++;
-		if (timeout >= 8) {
-			return { success: false, error: "Something went wrong" };
+	if (nextWednesday.month !== currentMonth) {
+		// Check if today is the last wednesday of the month
+		if (from.weekdayLong === "Wednesday") {
+			return { success: true, date: from };
 		}
-		current = current.minus({ day: 1 });
-		if (current.day < today.day) {
-			return { success: false, error: "No more Wednesdays in the month" };
-		}
+		return { success: false, error: "No more Wednesdays in the month" };
 	}
 
-	return { success: true, date: current };
+	let result = wednesdayCron.getNextDateFrom(nextWednesday);
+	while (result.month === currentMonth) {
+		nextWednesday = result;
+		result = wednesdayCron.getNextDateFrom(result);
+	}
+
+	return { success: true, date: nextWednesday };
 }

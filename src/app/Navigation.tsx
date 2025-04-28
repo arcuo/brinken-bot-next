@@ -10,7 +10,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ellipsis, EllipsisIcon } from "lucide-react";
+import { EllipsisIcon } from "lucide-react";
 
 const variants: Variants = {
 	hidden: { opacity: 0, x: -10 },
@@ -54,28 +54,28 @@ export default function Navigation() {
 					animate="visible"
 				>
 					<motion.li variants={variants}>
-						<Link href="/">
+						<Link href="/" passHref legacyBehavior>
 							<Button variant="outline" active={path === "/"}>
 								Home
 							</Button>
 						</Link>
 					</motion.li>
 					<motion.li variants={variants}>
-						<Link href="/users">
+						<Link href="/users" passHref legacyBehavior>
 							<Button variant="outline" active={path === "/users"}>
 								Users
 							</Button>
 						</Link>
 					</motion.li>
 					<motion.li variants={variants}>
-						<Link href="/dinners">
+						<Link href="/dinners" passHref legacyBehavior>
 							<Button variant="outline" active={path === "/dinners"}>
 								Dinner dates
 							</Button>
 						</Link>
 					</motion.li>
 					<motion.li variants={variants}>
-						<Link href="/logs">
+						<Link href="/logs" passHref legacyBehavior>
 							<Button variant="outline" active={path === "/logs"}>
 								Logs
 							</Button>

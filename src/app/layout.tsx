@@ -6,6 +6,7 @@ import { PageTransition } from "./PageTransition";
 import { ClerkProvider, SignOutButton, SignedIn } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { LogOutIcon } from "lucide-react";
+import Link from "next/link";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -34,17 +35,20 @@ export default function RootLayout({
 					className={`${geistSans.variable} ${geistMono.variable} grid h-screen w-screen grid-rows-[auto_1fr] antialiased`}
 				>
 					<header className="grid w-full grid-cols-2 items-center justify-center gap-2 px-10 py-5 lg:grid-cols-3">
-						<div>
-							<h1 className="font-bold text-2xl">Brinken Bot</h1>
-							<p>Hello and welcome to the bot</p>
-						</div>
+						<Link href="/">
+							<div>
+								<h1 className="font-bold text-2xl">Brinken Bot</h1>
+								<p>Hello and welcome to the bot</p>
+							</div>
+						</Link>
 						<div className="max-lg:flex max-lg:flex-col max-lg:items-end max-lg:gap-2 max-lg:place-self-end lg:contents">
 							<Navigation />
 
 							<SignedIn>
 								<SignOutButton>
 									<Button variant="outline" className="justify-self-end">
-										<LogOutIcon /> <span className="hidden md:block">Sign out</span>
+										<LogOutIcon />{" "}
+										<span className="hidden md:block">Sign out</span>
 									</Button>
 								</SignOutButton>
 							</SignedIn>

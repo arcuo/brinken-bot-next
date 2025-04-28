@@ -12,11 +12,16 @@ import {
 	TooltipContent,
 } from "@/components/ui/tooltip";
 import { handleDay } from "./actions/cron";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export function RunActionCard() {
 	const [loading, isLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState(false);
+	const [birthdays, setBirthdays] = useState(true);
+	const [dinners, setDinners] = useState(true);
+	const [houseMeeting, setHouseMeeting] = useState(true);
 
 	const action = async () => {
 		try {
@@ -29,7 +34,7 @@ export function RunActionCard() {
 		return { success: true };
 	};
 	return (
-		<Card.Card className="w-100 max-w-full">
+		<Card.Card className="max-w-full">
 			<Card.CardHeader>
 				<Card.CardTitle>Daily Check</Card.CardTitle>
 				<Card.CardDescription>
@@ -37,6 +42,32 @@ export function RunActionCard() {
 					creates birthday channels.
 				</Card.CardDescription>
 			</Card.CardHeader>
+			<Card.CardContent className="flex gap-5 [&>div>label]:text-xs [&>div]:flex [&>div]:gap-2">
+				<div>
+					<Label htmlFor="birthdays-checkbox">Run for birthdays</Label>
+					<Checkbox
+						id="birthdays-checkbox"
+						checked={birthdays}
+						onCheckedChange={(value) => setBirthdays(!!value)}
+					/>
+				</div>
+				<div>
+					<Label htmlFor="dinners-checkbox">Run for dinners</Label>
+					<Checkbox
+						id="dinners-checkbox"
+						checked={dinners}
+						onCheckedChange={(value) => setDinners(!!value)}
+					/>
+				</div>
+				<div>
+					<Label htmlFor="house-meeting-checkbox">Run for house meeting</Label>
+					<Checkbox
+						id="house-meeting-checkbox"
+						checked={houseMeeting}
+						onCheckedChange={(value) => setHouseMeeting(!!value)}
+					/>
+				</div>
+			</Card.CardContent>
 			<Card.CardFooter>
 				<Button
 					onClick={async () => {

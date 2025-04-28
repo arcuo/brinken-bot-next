@@ -27,56 +27,71 @@ import { env } from "@/env";
  *   - Send message if house meeting is on wednesday
  *   - Send message if house meeting is today
  */
-export async function handleDay() {
+export async function handleDay(
+	opts = {
+		birthdays: true,
+		dinners: true,
+		houseMeeting: true,
+	},
+) {
 	const settings = await getAllSettings();
 	await log("Handling day");
-	try {
-		await handleCleanUpBirthdayChannels();
-		await handleWeekBeforeBirthday();
-		await handleDayBirthdayTomorrow();
-		const birthdayChannelId =
-			settings.birthday_channel_id?.discordChannelId ?? env.BIRTHDAY_CHANNEL_ID;
-		if (!birthdayChannelId) {
-			throw Error(
-				"No birthday channel id found. Please set it in the settings.",
-			);
+	if (opts.birthdays) {
+		try {
+			await handleCleanUpBirthdayChannels();
+			await handleWeekBeforeBirthday();
+			await handleDayBirthdayTomorrow();
+			const birthdayChannelId =
+				settings.birthday_channel_id?.discordChannelId ??
+				env.BIRTHDAY_CHANNEL_ID;
+			if (!birthdayChannelId) {
+				throw Error(
+					"No birthday channel id found. Please set it in the settings.",
+				);
+			}
+			await handleBirthdayToday(birthdayChannelId);
+		} catch (err) {
+			if (err instanceof Error)
+				await error(
+					`Handle Day: Something when wrong with the birthdays: ${err.message}`,
+				);
 		}
-		await handleBirthdayToday(birthdayChannelId);
-	} catch (err) {
-		if (err instanceof Error)
-			await error(
-				`Handle Day: Something when wrong with the birthdays: ${err.message}`,
-			);
 	}
 
-	try {
-		const dinnerChannelId =
-			settings.dinner_channel_id?.discordChannelId ?? env.DINNER_CHANNEL_ID;
-		if (!dinnerChannelId) {
-			throw Error("No dinner channel id found. Please set it in the settings.");
+	if (opts.dinners) {
+		try {
+			const dinnerChannelId =
+				settings.dinner_channel_id?.discordChannelId ?? env.DINNER_CHANNEL_ID;
+			if (!dinnerChannelId) {
+				throw Error(
+					"No dinner channel id found. Please set it in the settings.",
+				);
+			}
+			await handleMondayBeforeDinner(dinnerChannelId);
+			await handleDayOfDinner(dinnerChannelId);
+		} catch (err) {
+			if (err instanceof Error)
+				await error(
+					`Handle Day: Something when wrong with the dinners: ${err.message}`,
+				);
 		}
-		await handleMondayBeforeDinner(dinnerChannelId);
-		await handleDayOfDinner(dinnerChannelId);
-	} catch (err) {
-		if (err instanceof Error)
-			await error(
-				`Handle Day: Something when wrong with the dinners: ${err.message}`,
-			);
 	}
 
-	try {
-		const generalChannelId =
-			settings.general_channel_id?.discordChannelId ?? env.GENERAL_CHANNEL_ID;
-		if (!generalChannelId) {
-			throw Error(
-				"No general channel id found. Please set it in the settings.",
-			);
+	if (opts.houseMeeting) {
+		try {
+			const generalChannelId =
+				settings.general_channel_id?.discordChannelId ?? env.GENERAL_CHANNEL_ID;
+			if (!generalChannelId) {
+				throw Error(
+					"No general channel id found. Please set it in the settings.",
+				);
+			}
+			await handleHouseMeeting(generalChannelId);
+		} catch (err) {
+			if (err instanceof Error)
+				await error(
+					`Handle Day: Something when wrong with the house meeting: ${err.message}`,
+				);
 		}
-		await handleHouseMeeting(generalChannelId);
-	} catch (err) {
-		if (err instanceof Error)
-			await error(
-				`Handle Day: Something when wrong with the house meeting: ${err.message}`,
-			);
 	}
 }
