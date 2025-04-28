@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Brinken Bot with NextJS
 
-## Getting Started
+This is a Discord bot that reminds us about dinners, birthdays and house
+meetings. It hosts both the endpoints and CRON jobs for the Discord bot and a
+website to view and manage the users and dinners.
 
-First, run the development server:
+Developed by [Bemi](https://github.com/arcuo). You can contact me at
+benjamin.zachariae@gmail.com.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Hosting
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Discord application
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The discord application is hosted on
+[Discord Developer Portal](https://discord.com/developers/applications/1358796040605532191/information).
+Owned by the `brinkenadminkonto` discord account. You can find access to the
+account in
+[Brinken Indflytter Guide](https://docs.google.com/document/d/1pVYvivttl5awFSU2ha6KtNyPEXF5Ws4zETgb1r0M3OE/edit?usp=sharing).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Application and CRON (Vercel)
 
-## Learn More
+The application website and endpoints are fully hosted on
+[Vercel](https://vercel.com/benjamins-projects-c6d527c3/brinken-bot-next) The
+current vercel application is owned by [Bemi](https://github.com/arcuo).
 
-To learn more about Next.js, take a look at the following resources:
+#### Cron
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Vercel handles the daily cron job and the cron is edited via
+[vercel.json](vercel.json).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Security and user (Clerk)
 
-## Deploy on Vercel
+The website is secured using Clerk which handles the authentication and
+authorization through the Vercel [middleware.ts](./src/middleware.ts).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The Discord bot handles security itself using the DISCORD_PUBLIC_KEY and
+DISCORD_BOT_TOKEN environment variables. Check out [env.ts](./src/env.ts) for
+more information.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The current clerk application is owned by [Bemi](https://github.com/arcuo).
+
+### Database
+
+The client uses `drizzle-orm` to interact with the database. Current setup is
+using a PostgreSQL database through [Neon](https://neon.tech/).
+
+The current neon application is owned by [Bemi](https://github.com/arcuo).
+
+## Development
+
+### Environment variables
+
+To run the bot locally you need to first set the environment variables in the
+`.env` file. You can make a copy of the [example.env](./example.env) file and
+rename it to `.env` to get started.
+
+- Discord variables are found at
+  [Discord Developer Portal](https://discord.com/developers/applications/1358796040605532191/information)
+- Clerk variables are found at [Clerk](https://dashboard.clerk.com) (need
+  [Bemi](https://github.com/arcuo) login)
+- Neon database url is found at [Neon](https://neon.tech/) (need
+  [Bemi](https://github.com/arcuo) login)
+- `CRON_SECRET` is a secret key set in the Vercel dashboard. You can generate
+  one using a password generator etc.
