@@ -29,7 +29,7 @@ ${schedule
 			},
 			link: {
 				text: "Manage chefs",
-				url: `https://${env.VERCEL_PROJECT_PRODUCTION_URL}/users`,
+				url: `https://${env.VERCEL_PROJECT_PRODUCTION_URL}/dinners`,
 			},
 		});
 	},
