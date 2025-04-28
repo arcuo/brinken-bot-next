@@ -35,7 +35,9 @@ export async function handleDay(
 	},
 ) {
 	const settings = await getAllSettings();
-	await log("Handling day");
+	await log(
+		`Handling day: Birthdays ${opts.birthdays ? "✅" : "❌"}, Dinners ${opts.dinners ? "✅" : "❌"}, House Meeting ${opts.houseMeeting ? "✅" : "❌"}`,
+	);
 	if (opts.birthdays) {
 		try {
 			await handleCleanUpBirthdayChannels();

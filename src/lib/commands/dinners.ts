@@ -1,10 +1,5 @@
-import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	SlashCommandBuilder,
-} from "discord.js";
-import { createResponse, type Command } from ".";
+import { SlashCommandBuilder } from "discord.js";
+import { createResponseWithWithLinkButton, type Command } from ".";
 import { getDinnerSchedule } from "@/app/actions/dinners";
 import { DateTime } from "luxon";
 import { env } from "@/env";
@@ -17,10 +12,11 @@ const dinnerSchedule = {
 	async execute() {
 		const schedule = await getDinnerSchedule();
 
-		return createResponse({
+		return createResponseWithWithLinkButton({
 			data: {
-				content: `# Dinner Schedule
-Here are the upcoming dinners in this server :spaghetti:
+				content: `
+# Dinner Schedule
+Here are the upcoming dinners and chefs :spaghetti:
 ${schedule
 	.map(({ dinner, headchef, souschef }) => {
 		const date = DateTime.fromJSDate(dinner.date);
@@ -28,7 +24,12 @@ ${schedule
   - :cook: Chef ${headchef.name} (<@${headchef.discordId}>) 
   - :cook: Sous Chef ${souschef.name} (<@${souschef.discordId}>)`;
 	})
-	.join("\n")}`,
+	.join("\n")}
+`,
+			},
+			link: {
+				text: "Manage chefs",
+				url: `https://${env.VERCEL_PROJECT_PRODUCTION_URL}/users`,
 			},
 		});
 	},

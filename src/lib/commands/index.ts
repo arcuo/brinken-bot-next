@@ -4,17 +4,14 @@ import {
 	type APIMessageComponentInteraction,
 	type ApplicationCommandOptionType,
 	ButtonStyle,
-	ComponentType,
 	InteractionResponseType,
 	MessageFlags,
 } from "@discordjs/core/http-only";
 
 import {
 	ActionRowBuilder,
-	BitField,
 	ButtonBuilder,
 	type InteractionReplyOptions,
-	type MessageCreateOptions,
 	type SlashCommandBuilder,
 	type SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
@@ -52,14 +49,15 @@ export function createResponse(opts: {
 	};
 }
 
-export function createResponseWithClearButton(opts: {
+export function createResponseWithWithLinkButton(opts: {
 	data: InteractionReplyOptions;
 	type?: InteractionResponseType;
+	link: {text: string, url: string};
 }): {
 	type: InteractionResponseType;
 	data: InteractionReplyOptions;
 } {
-	const { type = InteractionResponseType.ChannelMessageWithSource, data } =
+	const { type = InteractionResponseType.ChannelMessageWithSource, data, link } =
 		opts;
 	// Handle the interaction here
 	return {
@@ -73,9 +71,10 @@ export function createResponseWithClearButton(opts: {
 				new ActionRowBuilder<ButtonBuilder>()
 					.addComponents([
 						new ButtonBuilder()
-							.setStyle(ButtonStyle.Secondary)
-							.setLabel("Clear")
-							.setCustomId("clear_message"),
+							.setStyle(ButtonStyle.Link)
+							.setLabel(link.text)
+							.setURL(link.url)
+
 					])
 					.toJSON(),
 			],

@@ -42,7 +42,12 @@ import { EllipsisIcon, Trash2Icon } from "lucide-react";
 
 declare module "@tanstack/react-table" {
 	interface TableMeta<TData> {
-		updateRow: (index: number, newRow: TData, oldRow: TData) => Promise<void>;
+		updateRow: (
+			index: number,
+			newRow: TData,
+			oldRow: TData,
+			type: "headchef" | "souschef",
+		) => Promise<void>;
 		users: User[];
 	}
 }
@@ -100,6 +105,7 @@ const columns = [
 												headchef: u,
 											},
 											props.row.original,
+											"headchef",
 										);
 									}}
 								>
@@ -139,6 +145,7 @@ const columns = [
 												souschef: u,
 											},
 											props.row.original,
+											"souschef",
 										);
 									}}
 								>
@@ -171,13 +178,17 @@ export function DinnersTable({ data, users }: DataTableProps) {
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(), //load client-side pagination code
 		meta: {
-			async updateRow(index, newRow) {
+			async updateRow(index, newRow, oldRow, type) {
 				const oldRows = rows;
 				const newRows = rows.map((row, i) => (i === index ? newRow : row));
 				setRows(newRows);
 				setLoading(true);
 				try {
-					await updateDinner(newRow.dinner);
+					await updateDinner(newRow.dinner, {
+						type,
+						fromName: oldRow[type].name,
+						toName: newRow[type].name,
+					});
 				} catch (error) {
 					setRows(oldRows);
 					if (error instanceof Error) {

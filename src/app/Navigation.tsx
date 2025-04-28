@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import { usePathname } from "next/navigation";
@@ -23,22 +23,22 @@ export default function Navigation() {
 		<>
 			<nav className="lg:hidden">
 				<DropdownMenu>
-					<DropdownMenuTrigger>
+					<DropdownMenuTrigger asChild>
 						<Button variant="outline" className="justify-self-end">
 							<EllipsisIcon />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<Link href="/">
+						<Link href="/" passHref>
 							<DropdownMenuItem>Home</DropdownMenuItem>
 						</Link>
-						<Link href="/users">
+						<Link href="/users" passHref>
 							<DropdownMenuItem>Users</DropdownMenuItem>
 						</Link>
-						<Link href="/dinners">
+						<Link href="/dinners" passHref>
 							<DropdownMenuItem>Dinner dates</DropdownMenuItem>
 						</Link>
-						<Link href="/logs">
+						<Link href="/logs" passHref>
 							<DropdownMenuItem>Logs</DropdownMenuItem>
 						</Link>
 					</DropdownMenuContent>
@@ -54,32 +54,36 @@ export default function Navigation() {
 					animate="visible"
 				>
 					<motion.li variants={variants}>
-						<Link href="/" passHref legacyBehavior>
-							<Button variant="outline" active={path === "/"}>
-								Home
-							</Button>
-						</Link>
+						<ButtonLink variant="outline" active={path === "/"} href="/">
+							Home
+						</ButtonLink>
 					</motion.li>
 					<motion.li variants={variants}>
-						<Link href="/users" passHref legacyBehavior>
-							<Button variant="outline" active={path === "/users"}>
-								Users
-							</Button>
-						</Link>
+						<ButtonLink
+							variant="outline"
+							active={path === "/users"}
+							href="/users"
+						>
+							Users
+						</ButtonLink>
 					</motion.li>
 					<motion.li variants={variants}>
-						<Link href="/dinners" passHref legacyBehavior>
-							<Button variant="outline" active={path === "/dinners"}>
-								Dinner dates
-							</Button>
-						</Link>
+						<ButtonLink
+							variant="outline"
+							active={path === "/dinners"}
+							href="/dinners"
+						>
+							Dinner dates
+						</ButtonLink>
 					</motion.li>
 					<motion.li variants={variants}>
-						<Link href="/logs" passHref legacyBehavior>
-							<Button variant="outline" active={path === "/logs"}>
-								Logs
-							</Button>
-						</Link>
+						<ButtonLink
+							variant="outline"
+							active={path === "/logs"}
+							href="/logs"
+						>
+							Logs
+						</ButtonLink>
 					</motion.li>
 				</motion.ul>
 			</nav>

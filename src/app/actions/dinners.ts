@@ -8,6 +8,7 @@ import {
 	createPollToChannel,
 	sendMessageToChannel,
 } from "@/lib/discord/client";
+import { log } from "@/lib/log";
 import {
 	generateAllPairings,
 	getNextNWednesdaysFromDate,
@@ -119,7 +120,17 @@ export async function rescheduleDinners() {
 	revalidatePath("/dinners");
 }
 
-export async function updateDinner(dinner: typeof dinnerSchema.$inferSelect) {
+export async function updateDinner(
+	dinner: typeof dinnerSchema.$inferSelect,
+	update: {
+		type: "headchef" | "souschef";
+		fromName: string;
+		toName: string;
+	},
+) {
+	log(
+		`Update dinner ${DateTime.fromJSDate(dinner.date).toFormat("dd/MM/yyyy")} ${update.type} from ${update.fromName} to ${update.toName}`,
+	);
 	await db
 		.update(dinnerSchema)
 		.set(dinner)

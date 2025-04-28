@@ -3,6 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const buttonVariants = cva(
 	"inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -36,6 +37,17 @@ const buttonVariants = cva(
 	},
 );
 
+export function ButtonLink(
+	props: React.ComponentProps<typeof Button> & { href: string },
+) {
+	const { href, ...rest } = props;
+	return (
+		<Button asChild {...rest}>
+			<Link href={href}>{props.children}</Link>
+		</Button>
+	);
+}
+
 function Button({
 	className,
 	variant,
@@ -53,9 +65,9 @@ function Button({
 		<Comp
 			data-slot="button"
 			className={cn(
-				"transition-shadow",
+				"transition-all",
 				buttonVariants({ variant, size, className }),
-				{ "shadow-sm": active },
+				{ "font-bold": active },
 			)}
 			{...props}
 		/>

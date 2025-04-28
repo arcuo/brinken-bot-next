@@ -3,8 +3,6 @@ import { DateTime } from "luxon";
 import * as cron from "cron";
 
 const wednesdayCron = new cron.CronTime("0 0 * * wed");
-const mondayCron = new cron.CronTime("0 0 * * mon");
-
 export async function handleHouseMeeting(generalChannelId: string) {
 	// Check if this is the last wednesday of the month
 
@@ -13,19 +11,19 @@ export async function handleHouseMeeting(generalChannelId: string) {
 		return;
 	}
 
-	if (lastWednesday.date.diffNow("days").days === 2) {
+	if (Math.ceil(lastWednesday.date.diffNow("days").days) === 2) {
 		sendMessageToChannel(generalChannelId, {
 			content: `
-# House Meeting :house-with-garden:
+# House Meeting :house_with_garden:
 Remember that this coming Wednesday that we will have a house meeting!
 			`,
 		});
 	}
 
-	if (lastWednesday.date.day === DateTime.now().day) {
+	if (lastWednesday.date.diffNow("days").days === 0) {
 		sendMessageToChannel(generalChannelId, {
 			content: `
-# House Meeting :house-with-garden:
+# House Meeting :house_with_garden:
 Remember that this is the last Wednesday of the month and the house meeting is tonight at 18:00!
 			`,
 		});

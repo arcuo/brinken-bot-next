@@ -68,8 +68,8 @@ const columns = [
 		cell: ({ row, cell }) => {
 			const data = cell.getValue();
 			return (
-				<div className="text-center">
-					{data ? (
+                <div className="text-center">
+                    {data ? (
 						<Link href={`/logs/${row.original.id}`} target="_blank">
 							<Button size="icon" className="size-7" variant="outline">
 								<EyeIcon />
@@ -78,8 +78,8 @@ const columns = [
 					) : (
 						""
 					)}
-				</div>
-			);
+                </div>
+            );
 		},
 	}),
 	columnHelper.accessor("createdAt", {

@@ -25,7 +25,11 @@ export function RunActionCard() {
 
 	const action = async () => {
 		try {
-			await handleDay();
+			await handleDay({
+				birthdays,
+				dinners,
+				houseMeeting,
+			});
 		} catch (error) {
 			if (error instanceof Error)
 				return { success: false, error: error.message };
@@ -42,9 +46,10 @@ export function RunActionCard() {
 					creates birthday channels.
 				</Card.CardDescription>
 			</Card.CardHeader>
-			<Card.CardContent className="flex gap-5 [&>div>label]:text-xs [&>div]:flex [&>div]:gap-2">
+			<Card.CardContent className="flex flex-wrap items-center gap-5 [&>div>label]:text-xs [&>div]:flex [&>div]:gap-2">
+				<span className="font-semibold text-xs">Run for:</span>
 				<div>
-					<Label htmlFor="birthdays-checkbox">Run for birthdays</Label>
+					<Label htmlFor="birthdays-checkbox">Birthdays</Label>
 					<Checkbox
 						id="birthdays-checkbox"
 						checked={birthdays}
@@ -52,7 +57,7 @@ export function RunActionCard() {
 					/>
 				</div>
 				<div>
-					<Label htmlFor="dinners-checkbox">Run for dinners</Label>
+					<Label htmlFor="dinners-checkbox">Dinners</Label>
 					<Checkbox
 						id="dinners-checkbox"
 						checked={dinners}
@@ -60,7 +65,7 @@ export function RunActionCard() {
 					/>
 				</div>
 				<div>
-					<Label htmlFor="house-meeting-checkbox">Run for house meeting</Label>
+					<Label htmlFor="house-meeting-checkbox">House meeting</Label>
 					<Checkbox
 						id="house-meeting-checkbox"
 						checked={houseMeeting}
