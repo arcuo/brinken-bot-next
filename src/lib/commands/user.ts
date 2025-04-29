@@ -17,7 +17,7 @@ export const addUserCommand = {
 		const name = body.member?.user.global_name;
 		const nickname = body.member?.nick;
 		const url = new URL(
-			`${env.VERCEL_PROJECT_PRODUCTION_URL ?? "http://localhost:3000"}/users/add`,
+			`https://${env.VERCEL_PROJECT_PRODUCTION_URL}/users/add`,
 		);
 		url.searchParams.append("discordId", discordId ?? "");
 		url.searchParams.append("name", name ?? "");
