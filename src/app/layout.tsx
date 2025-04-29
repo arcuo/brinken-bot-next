@@ -32,9 +32,9 @@ export default function RootLayout({
 		<ClerkProvider>
 			<html lang="en">
 				<body
-					className={`${geistSans.variable} ${geistMono.variable} grid h-screen w-screen grid-rows-[auto_1fr] antialiased`}
+					className={`${geistSans.variable} ${geistMono.variable} relative grid h-screen w-screen grid-rows-[auto_1fr] antialiased`}
 				>
-					<header className="grid w-full grid-cols-2 items-center justify-center gap-2 px-10 py-5 lg:grid-cols-3">
+					<header className="grid w-full max-w-full grid-cols-2 items-center justify-center gap-2 overflow-x-auto px-10 py-5 lg:grid-cols-3">
 						<Link href="/">
 							<div>
 								<h1 className="font-bold text-2xl">Brinken Bot</h1>
@@ -43,7 +43,6 @@ export default function RootLayout({
 						</Link>
 						<div className="max-lg:flex max-lg:flex-col max-lg:items-end max-lg:gap-2 max-lg:place-self-end lg:contents">
 							<Navigation />
-
 							<SignedIn>
 								<SignOutButton>
 									<Button variant="outline" className="justify-self-end">
@@ -54,7 +53,7 @@ export default function RootLayout({
 							</SignedIn>
 						</div>
 					</header>
-					<main className="flex items-center justify-center gap-4 px-8 lg:px-[20%] lg:py-20">
+					<main className="max-w-full overflow-x-auto px-8 py-10 lg:px-[20%] lg:py-20">
 						<PageTransition>{children}</PageTransition>
 					</main>
 				</body>

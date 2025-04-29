@@ -1,7 +1,7 @@
 "use client";
 
 import {
-	type ColumnDef,
+	createColumnHelper,
 	flexRender,
 	getCoreRowModel,
 	getSortedRowModel,
@@ -12,7 +12,6 @@ import {
 import {
 	Table,
 	TableBody,
-	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -22,7 +21,7 @@ import type { User } from "@/lib/db/schemas/users";
 import { DateTime } from "luxon";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { EditUserDialog } from "./EditUserDialog";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import {
@@ -30,18 +29,18 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
-const columns: ColumnDef<User>[] = [
-	{
-		accessorKey: "name",
+const columnHelper = createColumnHelper<User>();
+
+const columns = [
+	columnHelper.accessor("name", {
 		header: "Name",
-	},
-	{
-		accessorKey: "nickname",
+	}),
+	columnHelper.accessor("nickname", {
 		header: "Nickname",
-	},
-	{
-		accessorKey: "birthday",
+	}),
+	columnHelper.accessor("birthday", {
 		header: ({ column }) => {
 			return (
 				<Tooltip>
@@ -83,14 +82,16 @@ const columns: ColumnDef<User>[] = [
 				? DateTime.fromJSDate(birthday).toFormat("dd LLL yyyy")
 				: "N/A";
 		},
-	},
-	{
-		accessorKey: "discordId",
+	}),
+	columnHelper.accessor("discordId", {
 		header: "Discord ID",
-	},
-	{
+	}),
+	columnHelper.display({
 		id: "actions",
 		header: "Actions",
+		meta: {
+			headerProps: { className: cn("text-right") },
+		},
 		cell({ row }) {
 			const user = row.original;
 			return (
@@ -100,7 +101,7 @@ const columns: ColumnDef<User>[] = [
 				</div>
 			);
 		},
-	},
+	}),
 ];
 
 interface DataTableProps {
@@ -122,49 +123,9 @@ export function UsersTable({ data }: DataTableProps) {
 	});
 
 	return (
-		<div className="rounded-md border">
-			<Table>
-				<TableHeader>
-					{table.getHeaderGroups().map((headerGroup) => (
-						<TableRow key={headerGroup.id}>
-							{headerGroup.headers.map((header) => {
-								return (
-									<TableHead key={header.id}>
-										{header.isPlaceholder
-											? null
-											: flexRender(
-													header.column.columnDef.header,
-													header.getContext(),
-												)}
-									</TableHead>
-								);
-							})}
-						</TableRow>
-					))}
-				</TableHeader>
-				<TableBody>
-					{table.getRowModel().rows?.length ? (
-						table.getRowModel().rows.map((row) => (
-							<TableRow
-								key={row.id}
-								data-state={row.getIsSelected() && "selected"}
-							>
-								{row.getVisibleCells().map((cell) => (
-									<TableCell key={cell.id}>
-										{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									</TableCell>
-								))}
-							</TableRow>
-						))
-					) : (
-						<TableRow>
-							<TableCell colSpan={columns.length} className="h-24 text-center">
-								No results.
-							</TableCell>
-						</TableRow>
-					)}
-				</TableBody>
-			</Table>
-		</div>
+		<Table>
+			<TableHeader table={table} />
+			<TableBody table={table} />
+		</Table>
 	);
 }

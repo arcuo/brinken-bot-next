@@ -2,9 +2,9 @@
 
 import {
 	createColumnHelper,
-	flexRender,
 	getCoreRowModel,
 	getPaginationRowModel,
+	type PaginationState,
 	useReactTable,
 } from "@tanstack/react-table";
 
@@ -12,10 +12,7 @@ import {
 	DataTablePagination,
 	Table,
 	TableBody,
-	TableCell,
-	TableHead,
 	TableHeader,
-	TableRow,
 } from "@/components/ui/table";
 
 import {
@@ -39,6 +36,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@/components/ui/dialog";
 import { EllipsisIcon, Trash2Icon } from "lucide-react";
+import { humanizeDateDiffFuture } from "@/lib/utils";
 
 declare module "@tanstack/react-table" {
 	interface TableMeta<TData> {
@@ -67,14 +65,7 @@ const columns = [
 		header: "When",
 		cell: ({ cell }) => {
 			const date = DateTime.fromJSDate(cell.getValue());
-			if (Math.floor(date.diffNow("days").days) === 0) {
-				return "Today";
-			}
-
-			if (date.diffNow("days").days < 7) {
-				return `${Math.ceil(date.diffNow("days").days)} days left`;
-			}
-			return date.diffNow("weeks").toFormat("w 'weeks' 'left'");
+			return humanizeDateDiffFuture(date);
 		},
 	}),
 	columnHelper.accessor("headchef.name", {
@@ -172,6 +163,11 @@ export function DinnersTable({ data, users }: DataTableProps) {
 	const [loading, setLoading] = useState(false);
 	const [openReschedule, setOpenReschedule] = useState(false);
 
+	const [pagination, setPagination] = useState<PaginationState>({
+		pageIndex: 0, //initial page index
+		pageSize: 15, //default page size
+	});
+
 	const table = useReactTable<DinnerDate>({
 		data: rows,
 		columns,
@@ -199,60 +195,22 @@ export function DinnersTable({ data, users }: DataTableProps) {
 			},
 			users,
 		},
+		onPaginationChange: setPagination, //update the pagination state when internal APIs mutate the pagination state
+		state: {
+			//...
+			pagination: {
+				...pagination,
+				pageSize: 12,
+			},
+		},
 	});
 
 	return (
 		<>
-			<div className="rounded-md border">
-				<Table>
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && "selected"}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
+			<Table>
+				<TableHeader table={table} />
+				<TableBody table={table} />
+			</Table>
 			<DataTablePagination
 				table={table}
 				pageSize={8}

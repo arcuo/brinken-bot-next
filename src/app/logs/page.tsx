@@ -12,6 +12,7 @@ export default async function Logs() {
 
 	return (
 		<PageTransitionWrapper className="container flex flex-col gap-4">
+			<h2 className="mb-4 font-semibold text-lg">Logs</h2>
 			<LogsTable data={logs} />
 		</PageTransitionWrapper>
 	);

@@ -2,7 +2,6 @@
 
 import {
 	createColumnHelper,
-	flexRender,
 	getCoreRowModel,
 	getPaginationRowModel,
 	useReactTable,
@@ -12,10 +11,7 @@ import {
 	DataTablePagination,
 	Table,
 	TableBody,
-	TableCell,
-	TableHead,
 	TableHeader,
-	TableRow,
 } from "@/components/ui/table";
 
 import { useEffect, useState } from "react";
@@ -68,8 +64,8 @@ const columns = [
 		cell: ({ row, cell }) => {
 			const data = cell.getValue();
 			return (
-                <div className="text-center">
-                    {data ? (
+				<div className="text-center">
+					{data ? (
 						<Link href={`/logs/${row.original.id}`} target="_blank">
 							<Button size="icon" className="size-7" variant="outline">
 								<EyeIcon />
@@ -78,8 +74,8 @@ const columns = [
 					) : (
 						""
 					)}
-                </div>
-            );
+				</div>
+			);
 		},
 	}),
 	columnHelper.accessor("createdAt", {
@@ -112,56 +108,10 @@ export function LogsTable({ data }: DataTableProps) {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<div className="rounded-md border">
-				<Table>
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && "selected"}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
+			<Table>
+				<TableHeader table={table} />
+				<TableBody table={table} />
+			</Table>
 			<DataTablePagination
 				table={table}
 				pageSize={8}

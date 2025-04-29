@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { getLastWednesdayOfMonth } from "./housemeeting";
+import { getLastWednesdayOfMonth } from "../src/app/actions/housemeeting";
 import { DateTime } from "luxon";
 
 describe("getLastWednesdayOfMonth", () => {

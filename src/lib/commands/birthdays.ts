@@ -3,6 +3,7 @@ import { type Command, createResponse } from ".";
 import { db } from "../db";
 import { users } from "../db/schemas/users";
 import { DateTime } from "luxon";
+import { sortBirthdays } from "../utils";
 
 const getBirthdays = {
 	id: "get-birthdays",
@@ -19,11 +20,7 @@ const getBirthdays = {
 					nextAge: Math.floor(nextAge),
 				};
 			})
-			.sort((a, b) => {
-				const aDate = DateTime.fromJSDate(a.birthday).set({ year: 0 });
-				const bDate = DateTime.fromJSDate(b.birthday).set({ year: 0 });
-				return aDate < bDate ? -1 : 1;
-			});
+			.sort((a, b) => sortBirthdays(a.birthday, b.birthday));
 
 		return createResponse({
 			data: {

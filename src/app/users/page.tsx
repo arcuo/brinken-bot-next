@@ -10,7 +10,7 @@ export default async function UsersPage() {
 
 	return (
 		<PageTransitionWrapper className="container flex flex-col gap-4">
-			<h2 className="mb-4 text-lg text-neutral-600">Users</h2>
+			<h2 className="mb-4 font-semibold text-lg">Users</h2>
 			<UsersTable data={users} />
 			<div>
 				<AddUserDialog />

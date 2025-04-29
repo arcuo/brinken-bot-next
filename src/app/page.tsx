@@ -15,7 +15,7 @@ export default async function Home() {
 	]);
 
 	return (
-		<PageTransitionWrapper className="flex w-full items-center justify-center gap-5 max-lg:flex-col">
+		<PageTransitionWrapper className="inline-flex w-full gap-5 overflow-auto max-lg:flex-col lg:items-center lg:justify-center">
 			<Image
 				alt="Brinken Bot Hello"
 				src={botImage}

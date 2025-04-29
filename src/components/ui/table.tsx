@@ -2,7 +2,7 @@
 
 import type * as React from "react";
 
-import type { Table as TableTanstack } from "@tanstack/react-table";
+import { flexRender, type Table as TableTanstack } from "@tanstack/react-table";
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -15,11 +15,18 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 
+declare module "@tanstack/react-table" {
+	interface ColumnMeta<TData, TValue> {
+		headerProps?: React.ComponentProps<"th">;
+		cellProps?: React.ComponentProps<"td">;
+	}
+}
+
 function Table({ className, ...props }: React.ComponentProps<"table">) {
 	return (
 		<div
 			data-slot="table-container"
-			className="relative w-full overflow-x-auto"
+			className="relative w-full overflow-x-auto rounded-md border"
 		>
 			<table
 				data-slot="table"
@@ -30,7 +37,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 	);
 }
 
-function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+function _TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
 	return (
 		<thead
 			data-slot="table-header"
@@ -40,13 +47,77 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
 	);
 }
 
-function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+function TableHeader<TData>({
+	className,
+	table,
+	...props
+}: React.ComponentProps<"thead"> & { table: TableTanstack<TData> }) {
+	return (
+		<_TableHeader {...props}>
+			{table.getHeaderGroups().map((headerGroup) => (
+				<TableRow key={headerGroup.id}>
+					{headerGroup.headers.map((header) => {
+						return (
+							<TableHead
+								key={header.id}
+								{...header.column.columnDef.meta?.headerProps}
+							>
+								{header.isPlaceholder
+									? null
+									: flexRender(
+											header.column.columnDef.header,
+											header.getContext(),
+										)}
+							</TableHead>
+						);
+					})}
+				</TableRow>
+			))}
+		</_TableHeader>
+	);
+}
+
+function _TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 	return (
 		<tbody
 			data-slot="table-body"
 			className={cn("[&_tr:last-child]:border-0", className)}
 			{...props}
 		/>
+	);
+}
+
+function TableBody<TData>({
+	className,
+	table,
+	...props
+}: React.ComponentProps<"tbody"> & { table: TableTanstack<TData> }) {
+	return (
+		<_TableBody {...props} className={cn("max-lg:max-w-screen", className)}>
+			{table.getRowModel().rows?.length ? (
+				table.getRowModel().rows.map((row) => (
+					<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+						{row.getVisibleCells().map((cell) => (
+							<TableCell
+								key={cell.id}
+								{...cell.column.columnDef.meta?.cellProps}
+							>
+								{flexRender(cell.column.columnDef.cell, cell.getContext())}
+							</TableCell>
+						))}
+					</TableRow>
+				))
+			) : (
+				<TableRow>
+					<TableCell
+						colSpan={table._getColumnDefs().length}
+						className="h-24 text-center"
+					>
+						No results.
+					</TableCell>
+				</TableRow>
+			)}
+		</_TableBody>
 	);
 }
 
