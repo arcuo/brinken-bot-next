@@ -87,7 +87,7 @@ export async function handleDay(
 				dinnerChannelId,
 				day: "Wednesday",
 				message:
-					"@everyone today is dinner day with @everyone. Remember to vote if you're attending! Poll closes at 13:00!",
+					"@everyone today is dinner day. Remember to vote if you're attending! Poll closes at 13:00!",
 				sendPoll: false,
 			});
 		} catch (err) {
