@@ -7,7 +7,7 @@ import {
 	handleDayBirthdayTomorrow,
 	handleBirthdayToday,
 } from "./birthdays";
-import { handleDayOfDinner, handleMondayBeforeDinner } from "./dinners";
+import { handleDinnerMessage } from "./dinners";
 import { handleHouseMeeting } from "./housemeeting";
 import { getAllSettings } from "./settings";
 import { env } from "@/env";
@@ -69,8 +69,27 @@ export async function handleDay(
 					"No dinner channel id found. Please set it in the settings.",
 				);
 			}
-			await handleMondayBeforeDinner(dinnerChannelId);
-			await handleDayOfDinner(dinnerChannelId);
+			await handleDinnerMessage({
+				dinnerChannelId,
+				day: "Sunday",
+				message:
+					"@everyone We are having our regular dinner date on Wednesday! It will be awesome to see you all there! :tada:",
+				sendPoll: true,
+			});
+			await handleDinnerMessage({
+				dinnerChannelId,
+				day: "Tuesday",
+				message:
+					"@everyone tomorrow we have our regular Wednesday dinner date. Remember to vote if you're attending! :writing_hand:",
+				sendPoll: false,
+			});
+			await handleDinnerMessage({
+				dinnerChannelId,
+				day: "Wednesday",
+				message:
+					"@everyone today is dinner day with @everyone. Remember to vote if you're attending! Poll closes at 13:00!",
+				sendPoll: false,
+			});
 		} catch (err) {
 			if (err instanceof Error)
 				await error(

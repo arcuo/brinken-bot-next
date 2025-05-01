@@ -1,6 +1,5 @@
 "use server";
 
-import { env } from "@/env";
 import { db } from "@/lib/db";
 import { dinners as dinnerSchema } from "@/lib/db/schemas/dinners";
 import { users } from "@/lib/db/schemas/users";
@@ -138,13 +137,30 @@ export async function updateDinner(
 	revalidatePath("/dinners");
 }
 
-/** Handle the monday before dinner. Notify chefs and send message for voting whether I'm coming */
-export async function handleMondayBeforeDinner(
-	dinnerChannelId: string,
-	debugging = false,
-) {
-	const isMonday = DateTime.now().weekdayLong === "Monday";
-	if (!debugging && !isMonday) return;
+/**
+ * Runs the dinner message logic.
+ * The function runs if the `day` is today.
+ * Will optionally send a poll if `sendPoll` is true.
+ */
+export async function handleDinnerMessage(opts: {
+	dinnerChannelId: string;
+	/** Day that the message and poll will be sent. Default is Sunday */
+	message: string;
+	/** The day the message will be sent. Default is Sunday */
+	day:
+		| "Monday"
+		| "Tuesday"
+		| "Wednesday"
+		| "Thursday"
+		| "Friday"
+		| "Saturday"
+		| "Sunday";
+	/** Whether to send a poll or not. Default is false */
+	sendPoll?: boolean;
+}) {
+	const { dinnerChannelId, day, sendPoll = false, message } = opts;
+	const isDayOfPoll = DateTime.now().weekdayLong === day;
+	if (!isDayOfPoll) return;
 
 	// Fetch next dinner day
 	const nextDinnerDay = await getNextDinner();
@@ -155,15 +171,11 @@ export async function handleMondayBeforeDinner(
 		);
 	}
 
-	const duration = DateTime.fromJSDate(nextDinnerDay.dinner.date).diffNow(
-		"hours",
-	).hours;
-
 	await sendMessageToChannel(dinnerChannelId, {
 		content: `
 # Dinner on Wednesday! :spaghetti:
 
-@everyone We are having our regular dinner date on Wednesday! It will be awesome to see you all there! :tada:
+${message}
 
 **Head chef**: <@${nextDinnerDay.headchef.discordId}>
 **Sous chef**: <@${nextDinnerDay.souschef.discordId}>
@@ -171,51 +183,32 @@ export async function handleMondayBeforeDinner(
 		`,
 	});
 
-	await createPollToChannel(dinnerChannelId, {
-		question: {
-			text: "Are you attending dinner on Wednesday?",
-		},
-		answers: [
-			{
-				text: "Yes I'm joining!",
-				emoji: "🤩",
-			},
-			{
-				text: "No I won't be joining",
-				emoji: "😟",
-			},
-			{
-				text: "I'll be joining late, leave me a plate!",
-				emoji: "🍝",
-			},
-		],
-		allowMultiselect: false,
-		duration,
-	});
-}
+	if (sendPoll) {
+		// Set poll to stop at 13:00 on the day of the dinner
+		const duration = DateTime.fromJSDate(nextDinnerDay.dinner.date)
+			.set({ hour: 13 })
+			.diffNow("hours").hours;
 
-export async function handleDayOfDinner(
-	dinnerChannelId: string,
-	debugging = false,
-) {
-	const isWednesday = DateTime.now().weekdayLong === "Wednesday";
-	if (!isWednesday && !debugging) {
-		return;
+		await createPollToChannel(dinnerChannelId, {
+			question: {
+				text: "Are you attending dinner on Wednesday?",
+			},
+			answers: [
+				{
+					text: "Yes I'm joining!",
+					emoji: "🤩",
+				},
+				{
+					text: "No I won't be joining",
+					emoji: "😟",
+				},
+				{
+					text: "I'll be joining late, leave me a plate!",
+					emoji: "🍝",
+				},
+			],
+			allowMultiselect: false,
+			duration,
+		});
 	}
-	// Fetch next dinner day
-	const thisDinnerDay = await getNextDinner();
-	if (!thisDinnerDay) {
-		throw Error(
-			"handleDayOfDinner: Could not find a dinner date for this week in the Database",
-		);
-	}
-
-	await sendMessageToChannel(dinnerChannelId, {
-		content: `
-# Dinner day :spaghetti:
-@everyone today is dinner day with 
-**Head chef**: <@${thisDinnerDay.headchef.discordId}>
-**Sous chef**: <@${thisDinnerDay.souschef.discordId}>
-		`,
-	});
 }
