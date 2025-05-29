@@ -9,17 +9,14 @@
 
 import { SlashCommandBuilder, type APIInteraction } from "discord.js";
 import { createResponse, interactionHasOptions, type Command } from ".";
-import { DateTime } from "@/lib/utils";
+import { createDoodleChannelMessage, DateTime } from "@/lib/utils";
 import { db } from "../db";
 import { type DoodleInsert, doodles } from "../db/schemas/doodles";
 import { z } from "zod";
 import { sendMessageToChannel } from "../discord/client";
-import { settings } from "../db/schemas/settings";
-import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { getSetting } from "@/app/actions/settings";
 import { log } from "../log";
-import { createDoodleChannelMessage } from "@/app/actions/doodles";
 
 function createDoodleMessage(message: string) {
 	return `
@@ -89,7 +86,7 @@ const doodleCommand = {
 				});
 			}
 
-            // Set the deadline to 18:00
+			// Set the deadline to 18:00
 			deadlineDate = deadlineDate.set({ hour: 18 });
 
 			// Check if url is valid

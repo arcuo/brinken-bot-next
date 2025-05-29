@@ -1,52 +1,24 @@
+"use server";
 import { db } from "@/lib/db";
 import { doodles } from "@/lib/db/schemas/doodles";
 import { sendMessageToChannel } from "@/lib/discord/client";
 import { inArray } from "drizzle-orm";
-import { DateTime } from "@/lib/utils";
-
-/**
- * Creates a message for the doodle channel
- * @param message Extra message to prepend to the doodle message.
- * @param doodle The doodle to create the message for.
- * @param deadline Whether to include the deadline in the message.
- * @returns String containing the message.
- */
-export function createDoodleChannelMessage(
-	message: string,
-	doodle: typeof doodles.$inferSelect,
-	deadline = true,
-) {
-	const messageToSend = `
-## :robot: :calendar_spiral: Doodle: ${doodle.title}
-${message}
-
-Please take a look and fill out the doodle here if you haven't already :raised_hands: : ${doodle.link}
-${
-	doodle.description
-		? `### Description
-${doodle.description}`
-		: ""
-}
-`;
-
-	if (deadline) {
-		const deadlineDateTime = DateTime.fromJSDate(doodle.deadline);
-		return `${messageToSend}
-### Deadline
-The deadline for this doodle is **${deadlineDateTime.toFormat("dd LLL yyyy")}** (in ${Math.round(
-			deadlineDateTime.diffNow("days").days,
-		)} days).
-                `;
-	}
-
-	return messageToSend;
-}
+import { createDoodleChannelMessage, DateTime } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 
 export async function handleDoodles(doodleChannelId: string) {
 	const doodles = await getDoodles();
 	const doodlesToUpdate: number[] = [];
+	const doodlesToRemove: number[] = [];
 	for (const doodle of doodles) {
 		const deadline = DateTime.fromJSDate(doodle.deadline);
+
+		// Check if the doodle deadline is in the past
+		if (deadline.diffNow("days").days < 0) {
+			doodlesToRemove.push(doodle.id);
+			continue;
+		}
+
 		// Check if the doodle is due tomorrow
 		if (deadline.diffNow("days").days < 1) {
 			sendMessageToChannel(doodleChannelId, {
@@ -102,6 +74,10 @@ export async function handleDoodles(doodleChannelId: string) {
 	if (doodlesToUpdate.length > 0) {
 		await updateDoodleLastMessage(doodlesToUpdate, DateTime.now().toJSDate());
 	}
+
+	if (doodlesToRemove.length > 0) {
+		await removeDoodles(doodlesToRemove);
+	}
 }
 
 export async function getDoodles() {
@@ -116,4 +92,10 @@ export async function updateDoodleLastMessage(
 		.update(doodles)
 		.set({ lastMessage })
 		.where(inArray(doodles.id, doodleId));
+	revalidatePath("/doodles");
+}
+
+export async function removeDoodles(ids: number[]) {
+	await db.delete(doodles).where(inArray(doodles.id, ids));
+	revalidatePath("/doodles");
 }

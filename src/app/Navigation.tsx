@@ -41,6 +41,9 @@ export default function Navigation() {
 						<Link href="/logs" passHref>
 							<DropdownMenuItem>Logs</DropdownMenuItem>
 						</Link>
+						<Link href="/doodles" passHref>
+							<DropdownMenuItem>Doodles</DropdownMenuItem>
+						</Link>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</nav>
@@ -83,6 +86,15 @@ export default function Navigation() {
 							href="/logs"
 						>
 							Logs
+						</ButtonLink>
+					</motion.li>
+					<motion.li variants={variants}>
+						<ButtonLink
+							variant="outline"
+							active={path === "/doodles"}
+							href="/doodles"
+						>
+							Doodles
 						</ButtonLink>
 					</motion.li>
 				</motion.ul>

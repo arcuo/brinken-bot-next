@@ -16,3 +16,4 @@ export const doodles = pgTable("doodles", {
 });
 
 export type DoodleInsert = typeof doodles.$inferInsert;
+export type Doodle = typeof doodles.$inferSelect;
