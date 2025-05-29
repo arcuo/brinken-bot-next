@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { getLastWednesdayOfMonth } from "../src/app/actions/housemeeting";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 
 describe("getLastWednesdayOfMonth", () => {
 	test("returns the last Wednesday of january", () => {

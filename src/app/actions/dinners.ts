@@ -13,7 +13,7 @@ import {
 	getNextNWednesdaysFromDate,
 } from "@/lib/pairings";
 import { asc, gte, eq, aliasedTable, desc, gt } from "drizzle-orm";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 const headchef = aliasedTable(users, "headchef");

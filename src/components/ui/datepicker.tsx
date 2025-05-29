@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { parseDate } from "@internationalized/date";
 import { useMemo } from "react";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 
 export function DatePicker({
 	date,

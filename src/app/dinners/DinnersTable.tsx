@@ -24,7 +24,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import {
 	rescheduleDinners,
 	updateDinner,

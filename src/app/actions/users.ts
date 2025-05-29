@@ -5,7 +5,7 @@ import { dinners } from "@/lib/db/schemas/dinners";
 import { users, type User } from "@/lib/db/schemas/users";
 import { sortBirthdays } from "@/lib/utils";
 import { eq, or } from "drizzle-orm";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 const userCache: User[] = [];

@@ -1,6 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
-import { DateTime } from "luxon";
+export { DateTime } from "luxon";
 import { twMerge } from "tailwind-merge";
+import { DateTime } from "luxon";
+
+// Set date to UTC+2 timezone
+DateTime.local().setZone("UTC+2");
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

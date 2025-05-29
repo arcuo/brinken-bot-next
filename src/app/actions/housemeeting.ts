@@ -1,5 +1,5 @@
 import { sendMessageToChannel } from "@/lib/discord/client";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import * as cron from "cron";
 
 const wednesdayCron = new cron.CronTime("0 0 * * wed");

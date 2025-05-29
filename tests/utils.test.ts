@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { humanizeDateDiffFuture, sortBirthdays } from "../src/lib/utils";
 import { describe, expect, it } from "bun:test";
 

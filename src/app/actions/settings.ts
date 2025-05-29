@@ -9,6 +9,7 @@ import {
 } from "@/lib/db/schemas/settings";
 import { log } from "@/lib/log";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { eq } from "drizzle-orm";
 
 export const getAllSettings = unstable_cache(
 	async () => {
@@ -67,4 +68,13 @@ export async function setSetting(settingId: SettingId, value: SettingValue) {
 	revalidatePath("/");
 
 	log("Setting updated", { data: { settingId, value } });
+}
+
+export async function getSetting(settingId: SettingId) {
+	const res = await db
+		.select({ value: settings.value })
+		.from(settings)
+		.where(eq(settings.settingId, settingId))
+		.limit(1);
+	return res.at(0)?.value;
 }

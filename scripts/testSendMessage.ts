@@ -1,5 +1,5 @@
 import { getNextDinner } from "@/app/actions/dinners";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 
 const nextDinnerDay = await getNextDinner();
 

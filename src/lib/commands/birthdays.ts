@@ -2,7 +2,7 @@ import { type APIInteraction, SlashCommandBuilder } from "discord.js";
 import { type Command, createResponse } from ".";
 import { db } from "../db";
 import { users } from "../db/schemas/users";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { sortBirthdays } from "../utils";
 
 const getBirthdays = {

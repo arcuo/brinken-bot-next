@@ -22,6 +22,7 @@ export function RunActionCard() {
 	const [birthdays, setBirthdays] = useState(true);
 	const [dinners, setDinners] = useState(true);
 	const [houseMeeting, setHouseMeeting] = useState(true);
+	const [doodles, setDoodles] = useState(true);
 
 	const action = async () => {
 		try {
@@ -29,6 +30,7 @@ export function RunActionCard() {
 				birthdays,
 				dinners,
 				houseMeeting,
+				doodles,
 			});
 		} catch (error) {
 			if (error instanceof Error)
@@ -70,6 +72,14 @@ export function RunActionCard() {
 						id="house-meeting-checkbox"
 						checked={houseMeeting}
 						onCheckedChange={(value) => setHouseMeeting(!!value)}
+					/>
+				</div>
+				<div>
+					<Label htmlFor="doodles-checkbox">Doodles</Label>
+					<Checkbox
+						id="doodles-checkbox"
+						checked={doodles}
+						onCheckedChange={(value) => setDoodles(!!value)}
 					/>
 				</div>
 			</Card.CardContent>

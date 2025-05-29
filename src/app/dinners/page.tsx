@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { PageTransitionWrapper } from "../PageTransition";
 import { DinnersTable } from "./DinnersTable";
 import { getAllNextDinners } from "@/app/actions/dinners";

@@ -1,0 +1,1 @@
+ALTER TABLE "doodles" ALTER COLUMN "lastMessage" SET NOT NULL;

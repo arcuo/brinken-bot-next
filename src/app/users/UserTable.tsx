@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 
 import type { User } from "@/lib/db/schemas/users";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { EditUserDialog } from "./EditUserDialog";
 import { useState, type CSSProperties } from "react";

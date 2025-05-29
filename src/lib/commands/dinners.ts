@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "discord.js";
 import { createResponseWithWithLinkButton, type Command } from ".";
 import { getDinnerSchedule } from "@/app/actions/dinners";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { env } from "@/env";
 
 const dinnerSchedule = {

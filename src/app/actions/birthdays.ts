@@ -11,7 +11,7 @@ import {
 	deleteChannels,
 } from "@/lib/discord/client";
 import { inArray } from "drizzle-orm";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 
 /** Checks if any birthdays are in a week before the current date.
  *

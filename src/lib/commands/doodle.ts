@@ -9,10 +9,17 @@
 
 import { SlashCommandBuilder, type APIInteraction } from "discord.js";
 import { createResponse, interactionHasOptions, type Command } from ".";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { db } from "../db";
 import { type DoodleInsert, doodles } from "../db/schemas/doodles";
 import { z } from "zod";
+import { sendMessageToChannel } from "../discord/client";
+import { settings } from "../db/schemas/settings";
+import { eq } from "drizzle-orm";
+import { env } from "@/env";
+import { getSetting } from "@/app/actions/settings";
+import { log } from "../log";
+import { createDoodleChannelMessage } from "@/app/actions/doodles";
 
 function createDoodleMessage(message: string) {
 	return `
@@ -44,6 +51,12 @@ const doodleCommand = {
 		)
 		.addStringOption((option) =>
 			option
+				.setName("title")
+				.setDescription("Title of the doodle")
+				.setRequired(true),
+		)
+		.addStringOption((option) =>
+			option
 				.setName("description")
 				.setDescription("Description of the doodle")
 				.setRequired(false),
@@ -62,10 +75,10 @@ const doodleCommand = {
 	async execute(body: APIInteraction) {
 		// Logic to create a doodle entry in the database
 		if (interactionHasOptions(body)) {
-			const [link, deadline, ...optionals] = body.data.options;
+			const [link, deadline, title, ...optionals] = body.data.options;
 
 			// Check if the deadline date is valid
-			const deadlineDate = DateTime.fromFormat(deadline.value, "dd-MM");
+			let deadlineDate = DateTime.fromFormat(deadline.value, "dd-MM");
 			if (!deadlineDate.isValid) {
 				return createResponse({
 					data: {
@@ -75,6 +88,9 @@ const doodleCommand = {
 					},
 				});
 			}
+
+            // Set the deadline to 18:00
+			deadlineDate = deadlineDate.set({ hour: 18 });
 
 			// Check if url is valid
 			const url = z.string().url().safeParse(link.value);
@@ -91,26 +107,48 @@ const doodleCommand = {
 			const description = optionals.find((o) => o.name === "description");
 			const warningLevel = optionals.find((o) => o.name === "warning-level");
 
-			const doodle: DoodleInsert = {
+			const doodleInsert: DoodleInsert = {
 				link: link.value,
 				deadline: deadlineDate.toJSDate(),
+				title: title.value,
 				description: description?.value,
 				level: warningLevel?.value as "light" | "medium" | "heavy",
 			};
 
-			await db.insert(doodles).values(doodle);
+			const doodle = (
+				await db.insert(doodles).values(doodleInsert).returning()
+			)[0];
+
+			const doodleChannelId =
+				(await getSetting("doodle_channel_id"))?.discordChannelId ??
+				env.DOODLE_CHANNEL_ID;
+
+			await log(
+				`${body.member?.user?.global_name ?? "Someone"} created a doodle ${doodle.title}. Sending message to doodle channel`,
+				{ data: { doodle, doodleChannelId } },
+			);
+			// Send message to doodle channel
+			if (doodleChannelId)
+				await sendMessageToChannel(doodleChannelId, {
+					content: createDoodleChannelMessage(
+						`New doodle created by <@${body.member?.user?.id}>`,
+						doodle,
+						true,
+					),
+				});
 
 			return createResponse({
 				data: {
-					content: `
+					content: createDoodleMessage(`
 A doodle has been created with the following details:
-- Link: ${doodle.link}
-- Description: ${doodle.description}
-- Deadline: ${doodle.deadline}
-- Warning level: ${describeWarningLevel(doodle.level)}
+- **Title**: ${doodle.title}
+- **Link**: ${doodle.link}
+- **Description**: ${doodle.description}
+- **Deadline**: ${deadlineDate.toFormat("dd-MM-yyyy")} (in ${Math.round(deadlineDate.diffNow("days").days)} days)
+- **Warning level**: ${describeWarningLevel(doodle.level)}
 
-_Note: There will always be a warning on the day before the doodle deadline._
-			`,
+_Note: There will always be a warning on the day of the doodle deadline._
+			`),
 				},
 			});
 		}
@@ -121,12 +159,12 @@ _Note: There will always be a warning on the day before the doodle deadline._
 
 function describeWarningLevel(level: DoodleInsert["level"]) {
 	switch (level) {
-		case "light":
-			return "Light warnings: Once a week until the deadline";
 		case "medium":
 			return "Medium warnings: Twice a week until the deadline";
 		case "heavy":
 			return "Heavy warnings: Every day until the deadline";
+		default:
+			return "Light warnings: Once a week until the deadline";
 	}
 }
 

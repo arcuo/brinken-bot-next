@@ -24,7 +24,7 @@ import {
 	Trash2Icon,
 } from "lucide-react";
 import type { logs } from "@/lib/db/schemas/logs";
-import { DateTime } from "luxon";
+import { DateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {

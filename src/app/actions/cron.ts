@@ -11,6 +11,7 @@ import { handleDinnerMessage } from "./dinners";
 import { handleHouseMeeting } from "./housemeeting";
 import { getAllSettings } from "./settings";
 import { env } from "@/env";
+import { handleDoodles } from "./doodles";
 
 /**
  *
@@ -32,11 +33,12 @@ export async function handleDay(
 		birthdays: true,
 		dinners: true,
 		houseMeeting: true,
+		doodles: true,
 	},
 ) {
 	const settings = await getAllSettings();
 	await log(
-		`Handling day: Birthdays ${opts.birthdays ? "✅" : "❌"}, Dinners ${opts.dinners ? "✅" : "❌"}, House Meeting ${opts.houseMeeting ? "✅" : "❌"}`,
+		`Handling day: Birthdays ${opts.birthdays ? "✅" : "❌"}, Dinners ${opts.dinners ? "✅" : "❌"}, House Meeting ${opts.houseMeeting ? "✅" : "❌"} Doodles ${opts.doodles ? "✅" : "❌"}`,
 	);
 	if (opts.birthdays) {
 		try {
@@ -112,6 +114,24 @@ export async function handleDay(
 			if (err instanceof Error)
 				await error(
 					`Handle Day: Something when wrong with the house meeting: ${err.message}`,
+				);
+		}
+	}
+
+	if (opts.doodles) {
+		try {
+			const doodleChannelId =
+				settings.doodle_channel_id?.discordChannelId ?? env.DOODLE_CHANNEL_ID;
+			if (!doodleChannelId) {
+				throw Error(
+					"No doodle channel id found. Please set it in the settings.",
+				);
+			}
+			await handleDoodles(doodleChannelId);
+		} catch (err) {
+			if (err instanceof Error)
+				await error(
+					`Handle Day: Something when wrong with the doodles: ${err.message}`,
 				);
 		}
 	}
