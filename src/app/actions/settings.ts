@@ -40,6 +40,14 @@ export const getAllSettings = unstable_cache(
 							channelName: "Set with env",
 						}
 					: null),
+			doodle_channel_id:
+				allSettings.find((s) => s.settingId === "doodle_channel_id")?.value ??
+				(env.DOODLE_CHANNEL_ID
+					? {
+							discordChannelId: env.DOODLE_CHANNEL_ID,
+							channelName: "Set with env",
+						}
+					: null),
 		};
 		return result;
 	},

@@ -1,0 +1,1 @@
+ALTER TYPE "public"."setting_enum" ADD VALUE 'doodle_channel_id';

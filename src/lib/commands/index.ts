@@ -19,8 +19,14 @@ import {
 import birthdays from "./birthdays";
 import users from "./user";
 import dinners from "./dinners";
+import doodle from "./doodle";
 
-export const commands = [...birthdays, ...users, ...dinners] as const;
+export const commands = [
+	...birthdays,
+	...users,
+	...dinners,
+	...doodle,
+] as const;
 
 export function createResponse(opts: {
 	data: InteractionReplyOptions;
@@ -52,13 +58,16 @@ export function createResponse(opts: {
 export function createResponseWithWithLinkButton(opts: {
 	data: InteractionReplyOptions;
 	type?: InteractionResponseType;
-	link: {text: string, url: string};
+	link: { text: string; url: string };
 }): {
 	type: InteractionResponseType;
 	data: InteractionReplyOptions;
 } {
-	const { type = InteractionResponseType.ChannelMessageWithSource, data, link } =
-		opts;
+	const {
+		type = InteractionResponseType.ChannelMessageWithSource,
+		data,
+		link,
+	} = opts;
 	// Handle the interaction here
 	return {
 		type,
@@ -73,8 +82,7 @@ export function createResponseWithWithLinkButton(opts: {
 						new ButtonBuilder()
 							.setStyle(ButtonStyle.Link)
 							.setLabel(link.text)
-							.setURL(link.url)
-
+							.setURL(link.url),
 					])
 					.toJSON(),
 			],
@@ -107,6 +115,6 @@ export type Command = {
 		body: APIInteraction,
 	) =>
 		| Promise<ReturnType<typeof createResponse>>
-		| ReturnType<typeof createResponse>;
+		| ReturnType<typeof createResponse> | undefined;
 	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
 };

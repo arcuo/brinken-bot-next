@@ -5,6 +5,7 @@ export const settingEnum = pg.pgEnum("setting_enum", [
 	"birthday_channel_id",
 	"dinner_channel_id",
 	"general_channel_id",
+	"doodle_channel_id",
 ]);
 
 export type SettingId = (typeof settingEnum.enumValues)[number];
@@ -17,6 +18,8 @@ export function getSettingName(settingId: SettingId) {
 			return "Dinner channel";
 		case "general_channel_id":
 			return "General channel";
+		case "doodle_channel_id":
+			return "Doodle channel";
 	}
 }
 
@@ -28,6 +31,8 @@ export function getSettingDescription(settingId: SettingId) {
 			return "Channel where dinner dates are posted and where the polls are created";
 		case "general_channel_id":
 			return "Channel where general messages are posted";
+		case "doodle_channel_id":
+			return "Channel where doodles are posted";
 	}
 }
 

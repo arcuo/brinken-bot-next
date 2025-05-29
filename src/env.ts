@@ -25,6 +25,7 @@ export const env = createEnv({
 		DINNER_CHANNEL_ID: z.string().min(1).optional(),
 		BIRTHDAY_CHANNEL_ID: z.string().min(1).optional(),
 		GENERAL_CHANNEL_ID: z.string().min(1).optional(),
+		DOODLE_CHANNEL_ID: z.string().min(1).optional(),
 
 		// Vercel
 		/** A production domain name of the project. We select the shortest production custom domain, or vercel.app domain if no custom domain is available. Note, that this is always set, even in preview deployments. This is useful to reliably generate links that point to production such as OG-image URLs. The value does not include the protocol scheme https://. */

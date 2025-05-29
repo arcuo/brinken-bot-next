@@ -1,6 +1,6 @@
 // import { commands } from "@/lib/commands";
 import { discord_auth } from "@/auth";
-import { commands } from "@/lib/commands";
+import { commands, type Command } from "@/lib/commands";
 import info from "@/lib/commands/info";
 import { error, log } from "@/lib/log";
 import { InteractionType } from "@discordjs/core/http-only";
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 		if (body.type === InteractionType.ApplicationCommand) {
 			const command = [...commands, ...info].find(
 				(c) => c.data.name === body.data.name,
-			);
+			) as Command | undefined;
 
 			if (!command) {
 				return Response.json({ error: "Command not found" }, { status: 404 });
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 			});
 
 			const resp = await command.execute(body);
-			return Response.json(resp);
+			if (resp) return Response.json(resp);
 		}
 	} catch (err) {
 		await (err instanceof Error
