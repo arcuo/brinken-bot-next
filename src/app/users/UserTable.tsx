@@ -2,7 +2,6 @@
 
 import {
 	createColumnHelper,
-	flexRender,
 	getCoreRowModel,
 	getSortedRowModel,
 	type SortingState,
@@ -12,16 +11,14 @@ import {
 import {
 	Table,
 	TableBody,
-	TableHead,
 	TableHeader,
-	TableRow,
 } from "@/components/ui/table";
 
 import type { User } from "@/lib/db/schemas/users";
 import { DateTime } from "@/lib/utils";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { EditUserDialog } from "./EditUserDialog";
-import { useState, type CSSProperties } from "react";
+import { useState, } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import {

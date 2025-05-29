@@ -69,9 +69,11 @@ export async function getBirthdayUsersAndResponsible(
 	const beforeDate = DateTime.fromJSDate(birthdayUsers[0].birthday).toFormat(
 		"MM-dd",
 	);
-	const responsible = users.findLast(
-		(user) => DateTime.fromJSDate(user.birthday).toFormat("MM-dd") < beforeDate,
-	) ?? users.at(-1);
+	const responsible =
+		users.findLast(
+			(user) =>
+				DateTime.fromJSDate(user.birthday).toFormat("MM-dd") < beforeDate,
+		) ?? users.at(-1);
 
 	return {
 		responsible: responsible!,

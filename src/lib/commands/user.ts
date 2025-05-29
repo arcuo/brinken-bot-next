@@ -11,7 +11,9 @@ export const addUserCommand = {
 	id: "add-user",
 	data: new SlashCommandBuilder()
 		.setName("add-user")
-		.setDescription("Gives you a link to add yourself to the database. It will automatically add your discord id."),
+		.setDescription(
+			"Gives you a link to add yourself to the database. It will automatically add your discord id.",
+		),
 	execute(body) {
 		const discordId = body.member?.user.id;
 		const name = body.member?.user.global_name;
@@ -57,7 +59,9 @@ export const viewUsersCommand = {
 							new ButtonBuilder()
 								.setLabel("View Users")
 								.setStyle(ButtonStyle.Link)
-								.setURL(`${env.VERCEL_PROJECT_PRODUCTION_URL ?? "http://localhost:3000"}/users`),
+								.setURL(
+									`${env.VERCEL_PROJECT_PRODUCTION_URL ?? "http://localhost:3000"}/users`,
+								),
 						])
 						.toJSON(),
 				],

@@ -3,7 +3,6 @@ import { PageTransitionWrapper } from "../PageTransition";
 import { DinnersTable } from "./DinnersTable";
 import { getAllNextDinners } from "@/app/actions/dinners";
 import { getAllUsers } from "../actions/users";
-import { Button } from "@/components/ui/button";
 
 export default async function DinnersPage() {
 	const [dinners, users] = await Promise.all([

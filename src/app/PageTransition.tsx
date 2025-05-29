@@ -1,8 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, type Variants } from "motion/react";
-import type { HTMLAttributes } from "react";
 
 export const variants: Variants = {
 	hidden: { opacity: 0, x: -10 },

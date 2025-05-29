@@ -129,17 +129,34 @@ export function AddUserForm({
 							<FormDescription>
 								Discord ID of the user{" "}
 								<Popover.Popover>
-									<Popover.PopoverTrigger asChild><Button
-										className="size-3 self-center p-2 text-xs"
-										variant="outline"
-									>
-										?
-									</Button></Popover.PopoverTrigger>
+									<Popover.PopoverTrigger asChild>
+										<Button
+											className="size-3 self-center p-2 text-xs"
+											variant="outline"
+										>
+											?
+										</Button>
+									</Popover.PopoverTrigger>
 									<Popover.PopoverContent className="flex w-fit max-w-90 flex-col gap-2 p-2 text-sm">
-										<p>To get the discord ID (<a target="_blank" className="text-blue-500 visited:text-blue-800 hover:underline"  href="https://support.playhive.com/discord-user-id/" rel="noreferrer">Guide</a>)</p> 
+										<p>
+											To get the discord ID (
+											<a
+												target="_blank"
+												className="text-blue-500 visited:text-blue-800 hover:underline"
+												href="https://support.playhive.com/discord-user-id/"
+												rel="noreferrer"
+											>
+												Guide
+											</a>
+											)
+										</p>
 										<ul className="ml-6 list-disc">
-											<li>On Discord, go to <code>Settings {">"} Advanced</code></li>
-											<li>Scroll down and make sure that Developer Mode is on</li>
+											<li>
+												On Discord, go to <code>Settings {">"} Advanced</code>
+											</li>
+											<li>
+												Scroll down and make sure that Developer Mode is on
+											</li>
 											<li>Right click on your account and click Copy ID</li>
 										</ul>
 									</Popover.PopoverContent>

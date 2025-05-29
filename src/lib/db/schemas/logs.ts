@@ -4,7 +4,6 @@ import {
 	pgTable,
 	serial,
 	text,
-	time,
 	timestamp,
 } from "drizzle-orm/pg-core";
 

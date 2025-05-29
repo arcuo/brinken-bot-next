@@ -48,7 +48,9 @@ export function DeleteDoodleDialog({
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter>
-					<DialogClose asChild><Button variant={"secondary"}>Cancel</Button></DialogClose>
+					<DialogClose asChild>
+						<Button variant={"secondary"}>Cancel</Button>
+					</DialogClose>
 					<DialogClose onClick={handleDelete} asChild>
 						<Button variant={"destructive"}>Delete</Button>
 					</DialogClose>

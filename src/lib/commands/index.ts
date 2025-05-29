@@ -115,6 +115,7 @@ export type Command = {
 		body: APIInteraction,
 	) =>
 		| Promise<ReturnType<typeof createResponse>>
-		| ReturnType<typeof createResponse> | undefined;
+		| ReturnType<typeof createResponse>
+		| undefined;
 	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
 };
