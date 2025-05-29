@@ -6,12 +6,19 @@ const wednesdayCron = new cron.CronTime("0 0 * * wed");
 export async function handleHouseMeeting(generalChannelId: string) {
 	// Check if this is the last wednesday of the month
 
-	const lastWednesday = getLastWednesdayOfMonth();
+	const lastWednesday = getLastWednesdayOfMonth(DateTime.fromISO("2025-05-26"));
 	if (!lastWednesday.success) {
 		return;
 	}
 
-	if (Math.ceil(lastWednesday.date.diffNow("days").days) === 2) {
+	if (lastWednesday.date.diffNow("days").days > 7) {
+		return;
+	}
+
+	// Set the time of the last wednesday to current time
+	const now = DateTime.now();
+
+	if (now.weekdayLong === "Sunday") {
 		sendMessageToChannel(generalChannelId, {
 			content: `
 # House Meeting :house_with_garden:
@@ -20,7 +27,7 @@ Remember that this coming Wednesday that we will have a house meeting!
 		});
 	}
 
-	if (lastWednesday.date.diffNow("days").days === 0) {
+	if (now.weekdayLong === "Wednesday") {
 		sendMessageToChannel(generalChannelId, {
 			content: `
 # House Meeting :house_with_garden:
