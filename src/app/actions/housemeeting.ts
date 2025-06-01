@@ -1,22 +1,23 @@
+import { env } from "@/env";
 import { sendMessageToChannel } from "@/lib/discord/client";
 import { DateTime } from "@/lib/utils";
 import * as cron from "cron";
 
 const wednesdayCron = new cron.CronTime("0 0 * * wed");
-export async function handleHouseMeeting(generalChannelId: string) {
+export async function handleHouseMeeting(
+	generalChannelId: string,
+	now = DateTime.now(),
+) {
 	// Check if this is the last wednesday of the month
 
-	const lastWednesday = getLastWednesdayOfMonth(DateTime.fromISO("2025-05-26"));
+	const lastWednesday = getLastWednesdayOfMonth(now);
 	if (!lastWednesday.success) {
 		return;
 	}
 
-	if (lastWednesday.date.diffNow("days").days > 7) {
+	if (lastWednesday.date.diff(now, "days").days > 7) {
 		return;
 	}
-
-	// Set the time of the last wednesday to current time
-	const now = DateTime.now();
 
 	if (now.weekdayLong === "Sunday") {
 		sendMessageToChannel(generalChannelId, {
@@ -32,6 +33,8 @@ Remember that this coming Wednesday that we will have a house meeting!
 			content: `
 # House Meeting :house_with_garden:
 Remember that this is the last Wednesday of the month and the house meeting is tonight at 18:00!
+
+Check out the notes from last house meeting [here](${env.HOUSE_MEETING_DOCS_URL}).
 			`,
 		});
 	}
