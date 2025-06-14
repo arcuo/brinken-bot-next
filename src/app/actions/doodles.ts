@@ -37,7 +37,8 @@ export async function handleDoodles(doodleChannelId: string) {
 	}
 
 	if (doodlesToUpdate.length > 0) {
-		await updateDoodleLastMessage(doodlesToUpdate, DateTime.now().toJSDate());
+		const now = DateTime.now().set({ hour: 0, minute: 0, second: 0 });
+		await updateDoodleLastMessage(doodlesToUpdate, now.toJSDate());
 	}
 
 	if (doodlesToRemove.length > 0) {
