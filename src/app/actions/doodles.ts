@@ -1,10 +1,37 @@
 "use server";
 import { db } from "@/lib/db";
-import { doodles } from "@/lib/db/schemas/doodles";
+import { doodles, type Doodle } from "@/lib/db/schemas/doodles";
 import { sendMessageToChannel } from "@/lib/discord/client";
 import { inArray } from "drizzle-orm";
 import { createDoodleChannelMessage, DateTime } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+
+export const shouldSendMessageByLevel = (
+	doodle: Doodle,
+	now: DateTime<boolean> = DateTime.now(),
+): boolean => {
+	const lastMessage = DateTime.fromJSDate(doodle.lastMessage);
+
+	switch (doodle.level) {
+		case "light":
+			// Check if the message was sent more than a week ago
+			if (Math.abs(lastMessage.diff(now, "days").days) >= 7) {
+				return true;
+			}
+			break;
+		case "medium":
+			if (Math.abs(lastMessage.diff(now, "days").days) >= 3) {
+				return true;
+			}
+			break;
+		case "heavy":
+			if (Math.abs(lastMessage.diff(now, "days").days) >= 1) {
+				return true;
+			}
+			break;
+	}
+	return false;
+};
 
 export async function handleDoodles(doodleChannelId: string) {
 	const doodles = await getDoodles();
@@ -28,46 +55,11 @@ export async function handleDoodles(doodleChannelId: string) {
 			continue;
 		}
 
-		const lastMessage = DateTime.fromJSDate(doodle.lastMessage);
-		// Handle different warning levels
-		switch (doodle.level) {
-			case "light":
-				// Check if the message was sent more than a week ago
-				if (lastMessage.diffNow("days").days > 7) {
-					sendMessageToChannel(doodleChannelId, {
-						content: createDoodleChannelMessage(
-							"Doodle reminder!",
-							doodle,
-							true,
-						),
-					});
-					doodlesToUpdate.push(doodle.id);
-				}
-				break;
-			case "medium":
-				if (lastMessage.diffNow("days").days > 3) {
-					sendMessageToChannel(doodleChannelId, {
-						content: createDoodleChannelMessage(
-							"Doodle reminder!",
-							doodle,
-							true,
-						),
-					});
-					doodlesToUpdate.push(doodle.id);
-				}
-				break;
-			case "heavy":
-				if (lastMessage.diffNow("days").days > 1) {
-					sendMessageToChannel(doodleChannelId, {
-						content: createDoodleChannelMessage(
-							"Doodle heavy reminder!",
-							doodle,
-							true,
-						),
-					});
-					doodlesToUpdate.push(doodle.id);
-				}
-				break;
+		if (shouldSendMessageByLevel(doodle)) {
+			sendMessageToChannel(doodleChannelId, {
+				content: createDoodleChannelMessage("Doodle reminder!", doodle, true),
+			});
+			doodlesToUpdate.push(doodle.id);
 		}
 	}
 

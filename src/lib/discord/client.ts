@@ -37,7 +37,7 @@ export async function getGuildRole(name: string, guildId = env.GUILD_ID) {
 }
 
 let current: APIUser | null = null;
-export async function getBotMember(guildId = env.GUILD_ID) {
+export async function getBotMember() {
 	if (current) return current;
 	current = await usersAPI.getCurrent();
 	return current;

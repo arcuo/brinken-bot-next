@@ -1,9 +1,9 @@
-// import { mock } from "bun:test";
+import { mock } from "bun:test";
 
-// mock.module("@/lib/discord/client", () => {
-// 	return {
-// 		sendMessageToChannel: mock(() => {
-// 			Promise.resolve();
-// 		}),
-// 	};
-// });
+mock.module("@/lib/discord/client", () => {
+	return {
+		sendMessageToChannel: mock(() => {
+			Promise.resolve();
+		}),
+	};
+});

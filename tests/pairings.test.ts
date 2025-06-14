@@ -1,9 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import {
-	generateAllPairings,
-	getLastWednesdayFromNow,
-	getNextNWednesdaysFromDate,
+	generateAllPairings, getNextNWednesdaysFromDate
 } from "@/lib/pairings";
 
 describe("Pairings", () => {
