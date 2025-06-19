@@ -15,7 +15,7 @@ export async function handleHouseMeeting(
 		return;
 	}
 
-	if (lastWednesday.date.diff(now, "days").days > 7) {
+	if (lastWednesday.date.diff(now, "days").days >= 5) {
 		return;
 	}
 
