@@ -1,13 +1,16 @@
-import { users } from "./schemas/users";
-import { dinners } from "./schemas/dinners";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
+import { env } from "@/env";
+
+import { users } from "./schemas/users";
+import { dinners } from "./schemas/dinners";
 import { channels } from "./schemas/channels";
 import { logs } from "./schemas/logs";
 import { settings } from "./schemas/settings";
 import { doodles } from "./schemas/doodles";
+import { sundayActivities } from "./schemas/sundayActivities";
 
-const client = postgres(process.env.DATABASE_URL!);
+const client = postgres(env.DATABASE_URL!);
 
 export const db = drizzle({
 	client,
@@ -18,5 +21,6 @@ export const db = drizzle({
 		channels,
 		settings,
 		doodles,
+		sundayActivities,
 	},
 });
