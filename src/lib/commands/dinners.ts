@@ -21,8 +21,8 @@ ${schedule
 	.map(({ dinner, headchef, souschef }) => {
 		const date = DateTime.fromJSDate(dinner.date);
 		return `- **${date.toFormat("dd/MM/yy")}** 
-  - :cook: Chef ${headchef.name} (<@${headchef.discordId}>) 
-  - :cook: Sous Chef ${souschef.name} (<@${souschef.discordId}>)`;
+  - :cook: Chef ${headchef?.name ?? "Missing! Who will help?"} ${headchef ? `(<@${headchef.discordId}>)` : ""} 
+  - :cook: Sous Chef ${souschef?.name ?? "Missing! Who will help?"} ${souschef ? `(<@${souschef.discordId}>)` : ""}`;
 	})
 	.join("\n")}
 `,
