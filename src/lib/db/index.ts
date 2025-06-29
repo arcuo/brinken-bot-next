@@ -1,7 +1,3 @@
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { env } from "@/env";
-
 import { users } from "./schemas/users";
 import { dinners } from "./schemas/dinners";
 import { channels } from "./schemas/channels";
@@ -9,11 +5,13 @@ import { logs } from "./schemas/logs";
 import { settings } from "./schemas/settings";
 import { doodles } from "./schemas/doodles";
 import { sundayActivities } from "./schemas/sundayActivities";
+import { neon } from "@neondatabase/serverless";
 
-const client = postgres(env.DATABASE_URL!);
+import { drizzle } from "drizzle-orm/neon-http";
+const sql = neon(process.env.DATABASE_URL!);
 
 export const db = drizzle({
-	client,
+	client: sql,
 	schema: {
 		users,
 		dinners,

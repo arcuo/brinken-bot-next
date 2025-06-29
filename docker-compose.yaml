@@ -1,0 +1,19 @@
+# docker-compose.yml
+
+services:
+  db:
+    image: postgres:latest
+    container_name: brinken-pg-db
+    environment:
+      POSTGRES_PASSWORD: pw # Password for the default 'postgres' user
+      POSTGRES_DB: brinkendb # The database to be created
+      POSTGRES_USER: postgres # Optional: Custom user for mydb_name
+      # POSTGRES_PASSWORD: myuserpassword # Optional: Password for myuser, if different
+    ports:
+      - "5432:5432" # Map container port 5432 to host port 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Persistent data volume
+
+volumes:
+  pgdata:
+    driver: local

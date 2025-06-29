@@ -8,17 +8,14 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 
-import {
-	Table,
-	TableBody,
-	TableHeader,
-} from "@/components/ui/table";
+import { Table, TableBody, TableHeader } from "@/components/ui/table";
 
 import type { User } from "@/lib/db/schemas/users";
 import { DateTime } from "@/lib/utils";
-import { DeleteUserDialog } from "./DeleteUserDialog";
+import { DeleteDialog } from "@/components/DeleteDialog";
+import { deleteUser } from "@/app/actions/users";
 import { EditUserDialog } from "./EditUserDialog";
-import { useState, } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import {
@@ -93,7 +90,11 @@ const columns = [
 			const user = row.original;
 			return (
 				<div className="flex justify-end gap-2">
-					<DeleteUserDialog userId={user.id} userName={user.name} />
+					<DeleteDialog
+						title="Delete User"
+						description={`Are you sure you want to delete ${user.name}? This will also delete all the dinners this user is part of.`}
+						onConfirm={async () => await deleteUser(user.id)}
+					/>
 					<EditUserDialog user={user} />
 				</div>
 			);

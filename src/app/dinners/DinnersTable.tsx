@@ -34,6 +34,8 @@ import { useEffect, useState } from "react";
 import type { User } from "@/lib/db/schemas/users";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import { DeleteDialog } from "@/components/DeleteDialog";
+import { deleteDinner } from "@/app/actions/dinners";
 import * as Dialog from "@/components/ui/dialog";
 import { EllipsisIcon, Trash2Icon } from "lucide-react";
 import { humanizeDateDiffFuture } from "@/lib/utils";
@@ -74,13 +76,15 @@ const columns = [
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger className="cursor-pointer">
-						{props.cell.getValue()}
+						{props.cell.getValue() ?? (
+							<span className="text-neutral-900/50 italic">None</span>
+						)}
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
 						<DropdownMenuLabel>Change Head Chef</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						{props.table.options.meta?.users
-							.filter((u) => u.id !== props.row.original.headchef.id)
+							.filter((u) => u.id !== props.row.original.headchef?.id)
 							.map((u) => (
 								<DropdownMenuItem
 									key={u.id}
@@ -114,13 +118,15 @@ const columns = [
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger className="cursor-pointer">
-						{props.cell.getValue()}
+						{props.cell.getValue() ?? (
+							<span className="text-neutral-900/50 italic">None</span>
+						)}
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
 						<DropdownMenuLabel>Change Sous Chef</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						{props.table.options.meta?.users
-							.filter((u) => u.id !== props.row.original.souschef.id)
+							.filter((u) => u.id !== props.row.original.souschef?.id)
 							.map((u) => (
 								<DropdownMenuItem
 									key={u.id}
@@ -145,6 +151,22 @@ const columns = [
 							))}
 					</DropdownMenuContent>
 				</DropdownMenu>
+			);
+		},
+	}),
+	columnHelper.display({
+		id: "actions",
+		header: "Actions",
+		cell({ row }) {
+			const dinner = row.original;
+			return (
+				<div className="flex justify-end gap-2">
+					<DeleteDialog
+						title="Delete Dinner"
+						description={"Are you sure you want to delete this dinner?"}
+						onConfirm={async () => await deleteDinner(dinner.dinner)}
+					/>
+				</div>
 			);
 		},
 	}),
@@ -182,8 +204,8 @@ export function DinnersTable({ data, users }: DataTableProps) {
 				try {
 					await updateDinner(newRow.dinner, {
 						type,
-						fromName: oldRow[type].name,
-						toName: newRow[type].name,
+						fromName: oldRow[type]?.name,
+						toName: newRow[type]?.name,
 					});
 				} catch (error) {
 					setRows(oldRows);
@@ -234,7 +256,13 @@ export function DinnersTable({ data, users }: DataTableProps) {
 					</DropdownMenu>
 				}
 			/>
-			<Dialog.Dialog open={openReschedule} onOpenChange={setOpenReschedule}>
+			<Dialog.Dialog
+				open={openReschedule}
+				onOpenChange={(value) => {
+					setOpenReschedule(value);
+					console.log(value);
+				}}
+			>
 				<Dialog.DialogContent>
 					<Dialog.DialogHeader>
 						<Dialog.DialogTitle>Reschedule dinners</Dialog.DialogTitle>

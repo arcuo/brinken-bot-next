@@ -1,10 +1,9 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { dinners } from "@/lib/db/schemas/dinners";
 import { users, type User } from "@/lib/db/schemas/users";
 import { sortBirthdays } from "@/lib/utils";
-import { eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { DateTime } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
@@ -28,11 +27,9 @@ export async function updateUser(user: typeof users.$inferSelect) {
 export async function deleteUser(userId: number) {
 	// Delete user from the database
 	await db.delete(users).where(eq(users.id, userId));
-	await db
-		.delete(dinners)
-		.where(or(eq(dinners.headchefId, userId), eq(dinners.souschefId, userId)));
 	console.log(`User with ID ${userId} deleted.`);
 	revalidatePath("/users");
+	revalidatePath("/dinners");
 }
 
 export async function getAllUsers(noCache = false) {

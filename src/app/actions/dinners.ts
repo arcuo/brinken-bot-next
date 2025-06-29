@@ -21,8 +21,8 @@ const souschef = aliasedTable(users, "souschef");
 
 export type DinnerDate = {
 	dinner: typeof dinnerSchema.$inferSelect;
-	headchef: typeof headchef.$inferSelect;
-	souschef: typeof souschef.$inferSelect;
+	headchef?: typeof headchef.$inferSelect;
+	souschef?: typeof souschef.$inferSelect;
 };
 
 export async function getAllNextDinners() {
@@ -113,9 +113,10 @@ export async function addNewScheduledDinners(fromDate: Date) {
 
 /** Remove all dinners and add new dinners */
 export async function rescheduleDinners() {
-	await db.delete(dinnerSchema).where(gt(dinnerSchema.date, new Date()));
-	await addNewScheduledDinners(new Date());
-	console.log("Dinners rescheduled");
+	const now = new Date();
+	await db.delete(dinnerSchema).where(gt(dinnerSchema.date, now));
+	await addNewScheduledDinners(now);
+	log(`Dinners rescheduled from ${now.toISOString()}`);
 	revalidatePath("/dinners");
 }
 
@@ -123,17 +124,50 @@ export async function updateDinner(
 	dinner: typeof dinnerSchema.$inferSelect,
 	update: {
 		type: "headchef" | "souschef";
-		fromName: string;
-		toName: string;
+		fromName?: string;
+		toName?: string;
 	},
 ) {
 	log(
-		`Update dinner ${DateTime.fromJSDate(dinner.date).toFormat("dd/MM/yyyy")} ${update.type} from ${update.fromName} to ${update.toName}`,
+		`Update dinner ${DateTime.fromJSDate(dinner.date).toFormat(
+			"dd/MM/yyyy",
+		)} ${update.type} from ${update.fromName ?? "None"} to ${update.toName ?? "None"}`,
 	);
 	await db
 		.update(dinnerSchema)
 		.set(dinner)
 		.where(eq(dinnerSchema.id, dinner.id));
+
+	revalidatePath("/dinners");
+}
+
+export async function deleteDinner(dinner: typeof dinnerSchema.$inferSelect) {
+	// Get all dinners after the deleted dinner
+	const nextDinners = await db
+		.select()
+		.from(dinnerSchema)
+		.where(gt(dinnerSchema.date, dinner.date));
+
+	// Delete the deleted dinner
+	await db.delete(dinnerSchema).where(eq(dinnerSchema.id, dinner.id));
+
+	// Set the dates of the next dinners to one week before
+	const updatedNextDinners = nextDinners.map((dinner) => {
+		const newDate = DateTime.fromJSDate(dinner.date)
+			.minus({ weeks: 1 })
+			.toJSDate();
+		return {
+			...dinner,
+			date: newDate,
+		};
+	});
+
+	await db.batch(
+		updatedNextDinners.map((dinner) =>
+			db.update(dinnerSchema).set(dinner).where(eq(dinnerSchema.id, dinner.id)),
+		) as any,
+	);
+
 	revalidatePath("/dinners");
 }
 
@@ -177,8 +211,8 @@ export async function handleDinnerMessage(opts: {
 
 ${message}
 
-**Head chef**: <@${nextDinnerDay.headchef.discordId}>
-**Sous chef**: <@${nextDinnerDay.souschef.discordId}>
+**Head chef**: ${nextDinnerDay.headchef?.discordId ? `<@${nextDinnerDay.headchef.discordId}>` : "None"}
+**Sous chef**: ${nextDinnerDay.souschef?.discordId ? `<@${nextDinnerDay.souschef.discordId}>` : "None"}
 
 		`,
 	});

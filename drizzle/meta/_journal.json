@@ -71,6 +71,20 @@
       "when": 1748542151934,
       "tag": "0009_breezy_morph",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1751203446877,
+      "tag": "0010_lean_power_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1751203585693,
+      "tag": "0011_skinny_maximus",
+      "breakpoints": true
     }
   ]
 }
